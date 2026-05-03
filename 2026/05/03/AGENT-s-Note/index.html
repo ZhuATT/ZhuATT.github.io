@@ -1,0 +1,1026 @@
+
+<!DOCTYPE html><html lang="zh-CN">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="hexo-theme" content="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.33.1" theme-name="Stellar" theme-version="1.33.1">
+  
+  
+  <meta name="generator" content="Hexo 8.1.1">
+  <meta http-equiv='x-dns-prefetch-control' content='on' />
+  
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True" >
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#000">
+  <meta name="theme-color" content="#f9fafb">
+  <title>AGENT's Note - ZhuATT</title>
+
+  
+  <meta name="description" content="学习Agent，越学越像在重新理解操作系统">
+  
+  <meta name="keywords" content="Agent">
+
+  <!-- feed -->
+  
+
+  <link rel="stylesheet" href="/css/main.css?v=1.33.1">
+
+
+  
+    <link rel="shortcut icon" href="/favicon.ico">
+  
+
+  
+
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"ZhuATT","sameAs":[]},"dateCreated":"2026-05-03T13:07:04+08:00","dateModified":"2026-05-03T15:28:01+08:00","datePublished":"2026-05-03T13:07:04+08:00","description":"","headline":"AGENT's Note","mainEntityOfPage":{"@type":"WebPage","@id":"http://zhuatt.github.io/2026/05/03/AGENT-s-Note/"},"publisher":{"@type":"Organization","name":"ZhuATT","sameAs":[]},"url":"http://zhuatt.github.io/2026/05/03/AGENT-s-Note/","keywords":"Agent","thumbnailUrl":"https://pic1.imgdb.cn/item/69f6ecb398d7db9e97818b43.jpg","image":1}</script>
+  
+</head>
+<body>
+
+<div class="l_body content" id="start" layout="post" type="tech" ><aside class="l_left"><div class="sidebg"></div><div class="leftbar-container">
+
+
+<header class="header"><div class="logo-wrap"><a class="avatar" href="/about/"><div class="bg" style="opacity:0;background-image:url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="https://pic1.imgdb.cn/item/69f6db9898d7db9e9781617b.jpg" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/image/2659360.svg';"></a><a class="title" href="/"><div class="main">ZhuATT</div></a></div></header>
+
+<div class="nav-area">
+
+<nav class="menu dis-select"></nav>
+</div>
+<div class="widgets">
+<div class="search-wrapper" id="search-wrapper"><form class="search-form"><a class="search-button" onclick="document.getElementById(&quot;search-input&quot;).focus();"><svg t="1705074644177" viewBox="0 0 1025 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1560" width="200" height="200"><path d="M1008.839137 935.96571L792.364903 719.491476a56.783488 56.783488 0 0 0-80.152866 0 358.53545 358.53545 0 1 1 100.857314-335.166073 362.840335 362.840335 0 0 1-3.689902 170.145468 51.248635 51.248635 0 1 0 99.217358 26.444296 462.057693 462.057693 0 1 0-158.255785 242.303546l185.930047 185.725053a51.248635 51.248635 0 0 0 72.568068 0 51.248635 51.248635 0 0 0 0-72.978056z" p-id="1561"></path><path d="M616.479587 615.969233a50.428657 50.428657 0 0 0-61.498362-5.534852 174.655348 174.655348 0 0 1-177.525271 3.484907 49.403684 49.403684 0 0 0-58.833433 6.76482l-3.074918 2.869923a49.403684 49.403684 0 0 0 8.609771 78.10292 277.767601 277.767601 0 0 0 286.992355-5.739847 49.403684 49.403684 0 0 0 8.404776-76.667958z" p-id="1562"></path></svg></a><input type="text" class="search-input" id="search-input" placeholder="站内搜索"></form><div id="search-result"></div><div class="search-no-result">没有找到内容！</div></div>
+
+
+
+<widget class="widget-wrapper recent post-list"><div class="widget-header dis-select"><span class="name">最近更新</span></div><div class="widget-body fs14"><a class="item title" href="/2026/05/03/AGENT-s-Note/"><span class="title">AGENT's Note</span></a></div></widget>
+</div>
+<footer class="footer dis-select"><div class="social-wrap"><a class="social" href="https://github.com/ZhuATT" target="_blank" rel="external nofollow noopener noreferrer"><img src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/08a41b181ce68.svg"/></a></div></footer>
+</div></aside><div class="l_main" id="main">
+
+
+
+
+
+<div class="article banner top"><img class="lazy bg" data-src="https://pic1.imgdb.cn/item/69f6ecb398d7db9e97818b43.jpg">
+  <div class="content">
+    <div class="top bread-nav footnote"><div class="left"><div class="flex-row" id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a>
+<span class="sep"></span><a class="cap breadcrumb" href="/">文章</a><span class="sep"></span><a class="cap breadcrumb-link" href="/categories/AIsec/">AIsec</a></div>
+<div class="flex-row" id="post-meta"><span class="text created">发布于：<time datetime="2026-05-03T05:07:04.000Z">2026-05-03</time></span><span class="sep updated"></span><span class="text updated">更新于：<time datetime="2026-05-03T07:28:01.315Z">2026-05-03</time></span></div></div></div>
+    
+    <div class="bottom only-title">
+      
+      <div class="text-area">
+        <h1 class="text title"><span>AGENT's Note</span></h1>
+        
+      </div>
+    </div>
+    
+  </div>
+  </div><article class="md-text content"><p>学习Agent，越学越像在重新理解操作系统</p>
+<ol>
+<li><p>操作系统里：进程与线程 Agent世界：主Agent与sub-Agent<br>操作系统里，进程是资源边界，线程是执行单元。同进程的线程共享内存，跨进程则要显式通信。Agent世界完全照搬了这套做法——sub-Agent，多个Agent并行协作，谁能访问谁的状态？共享上下文带来效率，也带来竞争条件。死锁、竞争、一致性</p>
+</li>
+<li><p>系统调用 Tool Use<br>用户程序想访问硬件，不能直接碰，必须通过系统调用陷入内核，由内核代为执行。Agent想搜网页、跑代码、查数据库，也不能自己动，必须通过Function Calling交给Harness执行。两者的本质完全一样：在权限边界上打一个受控的洞，能力从这个洞里流进来，风险也从这个洞里被隔住。</p>
+</li>
+<li><p>Cache &#x2F; 虚拟内存 Context Window<br>Context window是Agent最稀缺的资源，贵到每个token都要精打细算。这和CPU Cache的逻辑一模一样：什么放寄存器（当前推理），什么放内存（近期对话），什么换页到磁盘（压缩摘要）？当上下文满了，Agent框架开始做context compression——这就是在做内存分页与交换，只不过换出去的不是字节，是语义。</p>
+</li>
+<li><p>文件系统挂载 RAG<br>RAG把外部知识库挂进Agent的“文件树”，需要时检索，不需要时不占窗口。这和操作系统挂载外部存储的逻辑完全相同：用廉价的大容量存储补偿昂贵的快速内存，按需加载，用完释放。</p>
+</li>
+<li><p>内核 &#x2F; 调度器 Harness &#x2F; Orchestrator<br>Agent &#x3D; Model + Harness，Model是计算本身，Harness是操作系统内核：管权限、调度任务、分配资源、处理工具调用的返回。多Agent系统里的Orchestrator就是调度器，决定哪个Agent先跑、跑多久、结果传给谁</p>
+</li>
+</ol>
+<p>​     Agent时代,资源从CPU&#x2F;内存变成了token&#x2F;推理时间，“程序”从机器指令变成了自然语言。</p>
+<h1 id="RAG"><a href="#RAG" class="headerlink" title="RAG"></a>RAG</h1><p>基本信息<strong>Retrieval-Augmented Generation，检索增强生成</strong><br> 简要介绍：先从知识库中检索相关文档，再让模型基于这些文档生成回答<br> 能降低幻觉（Hallucination），让回答更贴近事实；还能节省训练成本，无需让模型“死记硬背”海量数据</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">核心流程：</span><br><span class="line">用户提问 → Query向量化 → 向量库检索 → Top-K相关片段 → </span><br><span class="line">拼接Prompt → LLM生成 → 带引用的答案输出</span><br></pre></td></tr></table></figure>
+
+<p>在提问前，把资料分片，然后把片段丢给embedding模型，给每个片段都产出对应的向量，然后存入向量数据库。<br> 在提问时，用户的问题会丢给embedding模型，然后embedding把生成的向量在向量数据库(chromadb最常用的向量数据库)里面找top-k个与用户问题最接近的某个固定数量的片段，然后把这些片段送给Cross-encoder模型进行重排，重排就相当于又进行了一遍精心筛选。</p>
+<h2 id="专业名词"><a href="#专业名词" class="headerlink" title="专业名词"></a>专业名词</h2><p>BM25:TF饱和”:SQL”出现 3 次就差不多够了，出现 10 次也不额外加分（<strong>防堆砌</strong>）<br> 长度归一化: 长文档命中关键词可能是巧合，短文档命中反而更可能是”真相关”<br> IDF 稀有度: “SQL”只在 10% 的文章里出现→很珍贵；”的”在 99% 的文章里出现→不值钱<br> 单一向量检索可能漏掉关键词精确匹配的内容，就同时用BM25做关键词召回，向量做语义召回<br> RRF排序融合就是解决多路知识的问题，可以设计返回知识的权重</p>
+<p>我的项目的RAG系统：首先走的是轻量化关键词，按照漏洞类型分类，然后打tag用BM25(关键词检索)召回，RRF解决那几个不懂的知识库来源的权重问题。</p>
+<p>实战RAG示例<br> 先初始化模型和Embedding(常用计算方法余弦相似度（最常用）、点积、L2距离),<br> FAISS是 Facebook 开源的向量相似度搜索库，适合本地开发测试，数据存储在内存中<br> 生产环境使用 Pinecone、Milvus、Chroma、Weaviate 等专业向量数据库，支持持久化和分布式<br> RAG的对话记忆<br> 有两种记忆，rag核心解决知识的来源，memory解决了上文说了啥</p>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>作用</th>
+<th>存储内容</th>
+<th>生命周期</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Vector Memory</strong> (RAG 核心)</td>
+<td>语义检索</td>
+<td>文档 chunk 的 embedding</td>
+<td>静态知识库，更新需重嵌入</td>
+</tr>
+<tr>
+<td><strong>Conversation Memory</strong> (对话增强)</td>
+<td>多轮上下文</td>
+<td>用户&#x2F;助手原始对话消息</td>
+<td>按 session 隔离，可持久化</td>
+</tr>
+</tbody></table>
+<p>rag核心的记忆的场景，比如说用户追问，几个问题不相同但是高度相似，就可以拼接历史精准检索<br> LangChain 新范式：<code>RunnableWithMessageHistory</code>，简单理解就是把「你刚才说过什么」自动拼到「你现在问什么」前面，一起送给大模型。<br> 使用的是一个<code>Runnable</code> 接口，通过拦截调用，通过 <code>session_id</code> 区分不同用户</p>
+<h2 id="RAG投毒"><a href="#RAG投毒" class="headerlink" title="RAG投毒"></a>RAG投毒</h2><p>在大模型从外部知识库中检索相关信息是，在很多个节点都可以投毒</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[外部数据源] → [摄入/清洗] → [向量库] → [检索] → [Prompt组装] → [LLM生成] → [用户]</span><br><span class="line">     ↑              ↑           ↑         ↑          ↑            ↑</span><br><span class="line">  投毒点1         投毒点2      投毒点3    投毒点4     投毒点5       投毒点6</span><br></pre></td></tr></table></figure>
+
+<p>外部数据源可以借鉴之前315曝光的大模型投毒(生成式引擎优化GEO投毒)，发布一些虚假的产品信息，让大模型在抓取公开源的时候混入这些错误的虚假信息，影响ai的正确回复<br> 语义投毒:主要的手法就是在知识源里面看似权威 + 语义稠密 + 与目标query高相关」的虚假知识，<strong>为什么有效</strong>：RAG 检索依赖语义相似度，投毒内容若与 query 向量距离更近，会优先召回<br> 指令注入型投毒：</p>
+<h1 id="Agent基本原理和问题"><a href="#Agent基本原理和问题" class="headerlink" title="Agent基本原理和问题"></a>Agent基本原理和问题</h1><p>Agent非常擅长模式复制。代码库里有什么模式，它就忠实地复制并放大——包括坏模式和架构漂移。这意味着不加约束的 Agent 会以惊人的速度积累技术债务。</p>
+<p>697</p>
+<table>
+<thead>
+<tr>
+<th>范式</th>
+<th>核心问题</th>
+<th>优化对象</th>
+<th>交互模式</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>提示词工程</strong></td>
+<td>怎么把话说清楚</td>
+<td>Prompt 的措辞、格式、示例，让模型听懂意图，更好的执行任务</td>
+<td>一问一答</td>
+</tr>
+<tr>
+<td><strong>上下文工程</strong></td>
+<td>怎么给 AI 喂信息</td>
+<td>文档、代码片段、历史对话，确保模型在合适的时机拿到正确且必要的事实信息</td>
+<td>信息注入 → 生成</td>
+</tr>
+<tr>
+<td><strong>驾驭工程</strong></td>
+<td>怎么让 Agent 可靠工作</td>
+<td>约束、反馈回路、控制系统，长链路任务中的持续正确、偏差纠正、故障恢复</td>
+<td>人类掌舵，Agent 执行</td>
+</tr>
+</tbody></table>
+<h2 id="Agent-Loop"><a href="#Agent-Loop" class="headerlink" title="Agent Loop"></a>Agent Loop</h2><p>Agent Loop 是所有 Agent 范式共享的运行引擎，其本质是一个 <code>while</code> 循环：每一次迭代完成”LLM 推理 → 工具调用 → 上下文更新”的完整链路，直至任务终止。<br> 大概的流程，开始，加载系统提示词和可用工具列表和用户的初始请求。判断是否达到终止条件，接着就开始Agent Loop的核心迭代：读取上下文，LLM推理决策，分析状态，决定下一步行动。执行行动，捕获执行的结果，追加上下文，然后又回到判断是否达成终止的条件(为防止模型陷入死循环，须设置强制中断条件，如最大迭代轮次上限)<br> 记忆系统就可以理解为一个Context Engineering，Prompt Engineering只是单轮交互、静态输入，能引导模型更好的输出目标的内容，但是Context Engineering是在<strong>多轮&#x2F;长文本&#x2F;动态环境</strong>中，管理上下文信息流以优化模型行为，作用在多轮对话、RAG、Agent、长文档理解，「哪些上下文该保留&#x2F;压缩&#x2F;丢弃，何时注入</p>
+<h2 id="ReAct"><a href="#ReAct" class="headerlink" title="ReAct"></a>ReAct</h2><p>是一个AI agent目前主流的开发范式<br> 将“思维链（CoT）推理”与“外部环境交互行动”相结合，弥补单纯 LLM 缺乏实时信息和容易产生幻觉的缺陷。通过交织推理和行动，ReAct 使模型生成更可靠、可追踪的任务解决轨迹，提高解释性和准确性</p>
+<ul>
+<li><strong>优势</strong>：显著减少幻觉（引入外部真实数据验证）、提升复杂任务的成功率、具备极高的可解释性与可调试性（完整的推理轨迹清晰可见）。</li>
+<li><strong>局限性</strong>：多轮循环迭代会导致系统整体响应延迟增加，同时其表现高度依赖所集成的外部工具和 Skills 的质量与稳定性</li>
+</ul>
+<p>从底层来看，驱动 Agent Loop 运转的核心是一套动态组装的 Prompt：</p>
+<h2 id="Prompt-Engineering"><a href="#Prompt-Engineering" class="headerlink" title="Prompt Engineering"></a>Prompt Engineering</h2><p>对于基于大语言模型开发应用（如智能客服、写作助手、代码生成工具）的开发者来说，提示词工程是核心环节：<strong>它是模型的配置接口</strong>：通过精心设计的提示词（常称为 <strong>系统提示</strong>），可以定义 AI 助手的角色、行为准则和知识范围。<br> 影响应用效果和成本：好的提示词能用更短的交互、更低的 API 调用成本，获得更优的结果<br> 让prompt效果更好的方法: 给ai一个设定好的角色，约束ai的输出边幅或者工作范围，把复杂的任务拆解成一个一个步骤。<br> 要首先结合项目的背景写好System Prompt</p>
+<h3 id="区分数据和提示词"><a href="#区分数据和提示词" class="headerlink" title="区分数据和提示词"></a>区分数据和提示词</h3><p>用xml标签分离数据和指令，指令在标签外，数据在标签内</p>
+<h2 id="Harness-Engineering"><a href="#Harness-Engineering" class="headerlink" title="Harness Engineering"></a>Harness Engineering</h2><p>本质上是为 AI 系统搭建一个“可控运行和测试的框架,大模型和 Agent 的行为是不确定的，而且涉及多步推理和工具调用，如果没有一个统一的 harness.<br> 驾驭工程，简单说就是构建<strong>约束机制、反馈回路、工作流控制和持续改进循环</strong><br> 四个核心组件:<br> Pasted image 20260413164359.png<br> 上下文工程,按需检索 · 活文档机制,比如skills，还有AGENTS.md，<strong>AGENTS.md</strong> 是 AI 智能体进入代码仓库时看到的第一份指南。但这不是一本静态的 1000 页说明书——上下文是稀缺资源，过多的指导反而会挤掉任务、代码和相关文档的空间，更好的做法是：提供一个稳定、小巧的入口点，然后教 Agent 根据当前任务按需检索和拉取更多的上下文<br> 熵管理（Entropy Management）——垃圾回收</p>
+<h2 id="A2A-协议"><a href="#A2A-协议" class="headerlink" title="A2A 协议"></a>A2A 协议</h2><p>通信协议(Agent-to-Agent)</p>
+<h1 id="Transformer-架构简析"><a href="#Transformer-架构简析" class="headerlink" title="Transformer 架构简析"></a>Transformer 架构简析</h1><p>想象你要写一篇关于太阳系的文章： </p>
+<ul>
+<li><strong>通读资料</strong>：你会先看很多相关的书籍和网页。</li>
+<li><strong>抓住重点</strong>：你会注意到太阳、行星、轨道、引力这些词频繁出现且相互关联。</li>
+<li><strong>组织语言</strong>：根据你想表达的重点（比如介绍火星），你会选择性地运用之前看到的关于火星大小、颜色、位置等信息，并组织成通顺的句子。</li>
+</ul>
+<p>Transformer 的工作方式与此类似，它的核心流程分为三个阶段：</p>
+<ol>
+<li><strong>输入处理</strong>：你的话被拆分成词或字（Token），并转换成计算机能理解的数字（向量）。</li>
+<li>**理解上下文（核心）：自注意力机制（Self-Attention）开始工作。它让模型在处理句子中每一个词时，都能权衡句子中所有其他词的重要性。这个过程是并行的，速度极快。</li>
+<li><strong>生成与循环</strong>：模型基于对所有词的理解，计算出概率分布，预测下一个最可能出现的词。选中并输出这个词后，将其作为新的输入，重复整个过程，直到生成完整回答。<br><img src="https://www.runoob.com/wp-content/uploads/2026/02/llm-runoob-transf-scaled.png" alt="img"></li>
+</ol>
+<h1 id="LangGraph和langchain"><a href="#LangGraph和langchain" class="headerlink" title="LangGraph和langchain"></a>LangGraph和langchain</h1><p>一个Agent基本的组成就是<br> LLM 推理引擎<br> 任务规划层 任务拆解和规划，树状搜索优化<br> 记忆系统  短期记忆直接利用模型上下文，长期记忆向量库，RAG<br> 工具调用Function Calling MCP  一些工具API</p>
+<p>参考文章:<a target="_blank" rel="noopener" href="https://forum.butian.net/ai_security/15">奇安信攻防社区-基于LangGraph的自主网络攻防（CTF）智能体</a></p>
+<p>LangGraph三大核心：Graph（图）<br> Graph 是整个工作流的蓝图，定义了 Agent 的完整逻辑结构。它由节点（Nodes）和边（Edges）组成<br> 节点:   节点是普通的 Python 函数，接收当前 State，返回更新后的 State,<strong>职责</strong>:执行业务逻辑（LLM 调用、工具执行、数据清洗、API 请求等）<br> 边(edge):定义节点间的跳转关系，不参与任何数据处理</p>
+<p>State（状态）<br> State 是贯穿整个图的<strong>共享数据结构</strong>。每个节点可以读取和更新 State，更新后的 State 会传递给下一个节点。<br> 相当于是一个全局状态或者可以理解成一个全局上下文对象,一个记录信息的字典</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">GraphState</span>(<span class="title class_ inherited__">TypedDict</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;图状态数据结构，类型为字典&quot;&quot;&quot;</span></span><br><span class="line">    messages: Annotated[<span class="built_in">list</span>, add_messages]  <span class="comment"># 设置消息列表，并添加归纳函数</span></span><br><span class="line">    node_name: <span class="built_in">str</span></span><br></pre></td></tr></table></figure>
+
+<p>Node<br> 每个Node都是“无状态”的纯函数,它只干一件事：从State拿到数据，处理(调大模型),这里会返回ai_message，就是一个功能函数</p>
+<p>Edge<br> 边，但我更愿意理解成是路由或者是控制流，上面提到的无状态的node节点，要使用Edge连接起来，串成一个完整的工作  ，起始和结束为：start和end</p>
+<p>Compile</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 4.编译图为Runnable可运行组件</span></span><br><span class="line">graph = graph_builder.<span class="built_in">compile</span>()</span><br></pre></td></tr></table></figure>
+
+<p>这个就是编译功能<br> 将刚刚构建好的组件编译成一个<strong>可执行的对象（Runnable）</strong>，它会检查你的逻辑是否有环、是否有没连上的孤岛节点</p>
+<p>简单演示完整调用流程:<br> 添加节点和边</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 2.添加节点</span></span><br><span class="line">graph_builder.add_node(<span class="string">&quot;llm&quot;</span>, chatbot)<span class="comment"># 给chatbot命名为llm</span></span><br><span class="line">graph_builder.add_node(<span class="string">&quot;tool_executor&quot;</span>, tool_executor)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 3.添加边，注意并不是按代码顺序执行的</span></span><br><span class="line">graph_builder.add_edge(START, <span class="string">&quot;llm&quot;</span>)</span><br><span class="line">graph_builder.add_edge(<span class="string">&quot;tool_executor&quot;</span>, <span class="string">&quot;llm&quot;</span>)</span><br><span class="line">graph_builder.add_conditional_edges(<span class="string">&quot;llm&quot;</span>, route)</span><br></pre></td></tr></table></figure>
+
+<p>首先开始，state的内容是：messages &#x3D; 用户输入的问题<br> 此时LLM可以看到消息列表和绑定的工具（name、description、args_schema）<br> 决定是：直接回答（只返回content），或调用工具（返回 content + tool_calls），模型想调用工具的话就会带上tool_calls，底层的system prompt可能是</p>
+<p>你是一个助手。你拥有以下工具可用： 工具名：google_serper，描述：一个谷歌搜索API，参数格式：{‘query’: ‘string’}。 **如果用户的问题你需要查资料，请务必输出格式为 <code>&lt;tool_call&gt;{...}&lt;/tool_call&gt;</code> 的内容，不要说废话</p>
+<p>关于实际的工具调用的问题，模型只要看到类似搜索的问题，就预测出一段符合JSON格式的代码块</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">模型输出：&#123;&quot;name&quot;: &quot;google_serper&quot;, &quot;args&quot;: &#123;&quot;query&quot;: &quot;xxxx大学 xxxx&quot;&#125;&#125;</span><br><span class="line"></span><br><span class="line">库的处理：LangChain的底层会用正则表达式或者特殊的 Parser（解析器）把这段字符串抠出来，封装成我们看到的tool_calls对象</span><br></pre></td></tr></table></figure>
+
+<p>LangChain 是一个用于构建 LLM 应用的开源框架，支持链式调用、记忆管理和工具集成</p>
+<h2 id="APG"><a href="#APG" class="headerlink" title="APG"></a>APG</h2><p>Agent Pattern Graph</p>
+<ul>
+<li>安全专家自然语言表达经验 -&gt; AI 梳理成 APG -&gt; APG Runtime 解释执行 APG</li>
+</ul>
+<p>APG 是一种基于 YAML 声明式语法定义的有向无环图 (DAG）（后续可能酌情增加环的概念，以支持循环、递归和图复用），用于描述一个代码安全审计或者渗透测试流程，也可以描述任意通用领域 SOP。由一系列节点和边组成，其中节点定义 Agent 的操作任务和预期产出，边定义流程的动态路由条件。APG Runtime 负责解释运行APG<br> 示例</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">name:</span> <span class="string">办公网网站风险测试</span>  </span><br><span class="line"><span class="attr">agent:</span> <span class="string">PydanticAI</span>  </span><br><span class="line">  </span><br><span class="line"><span class="attr">context:</span>  </span><br><span class="line">  <span class="attr">target_url:</span> <span class="string">&quot;&quot;</span>          <span class="comment"># 网站URL，APG的输入  </span></span><br><span class="line">  <span class="attr">auth_status:</span> <span class="string">&quot;&quot;</span>         <span class="comment"># n2 节点产出的鉴权状态 (SSO, Custom, None)  </span></span><br><span class="line">  <span class="attr">bypass_result:</span> <span class="string">&quot;&quot;</span>       <span class="comment"># n4 节点产出的绕过结果 (Success/Fail)  </span></span><br><span class="line">  <span class="attr">vulnerability_report:</span> <span class="string">&quot;&quot;</span> <span class="comment"># n6 节点产出的漏洞信息或无漏洞报告  </span></span><br><span class="line">  </span><br><span class="line"><span class="attr">nodes:</span>  </span><br><span class="line">  <span class="bullet">-</span> <span class="attr">id:</span> <span class="string">n2</span>  </span><br><span class="line">    <span class="attr">type:</span> <span class="string">start</span>  </span><br><span class="line">    <span class="attr">name:</span> <span class="string">访问目标,检测身份认证</span>  </span><br><span class="line">    <span class="attr">inputs:</span>  </span><br><span class="line">      <span class="bullet">-</span> <span class="string">target_url</span>  </span><br><span class="line">    <span class="attr">content:</span> <span class="string">|  </span></span><br><span class="line"><span class="string">      行为: 访问目标网站 &#123;&#123;target_url&#125;&#125; 首页, 获取响应和请求记录。  </span></span><br><span class="line"><span class="string">      判断是否存在 SSO 统一身份认证，以及是否存在自定义认证。如果直接可访问功能界面，没有跳转和登录，则认为“无任何鉴权”。  </span></span><br><span class="line"><span class="string">      将鉴权状态总结输出到 &#x27;auth_status&#x27; 变量中（可选值：SSO, Custom, None）。  </span></span><br><span class="line"><span class="string">      工具建议: browser_navigate, browser_network_requests  </span></span><br><span class="line"><span class="string"></span>    <span class="attr">outputs:</span>  </span><br><span class="line">      <span class="bullet">-</span> <span class="string">auth_status</span>  </span><br><span class="line">  <span class="bullet">-</span> <span class="attr">id:</span> <span class="string">n3</span>  </span><br><span class="line">    <span class="attr">type:</span> <span class="string">end</span>  </span><br><span class="line">    <span class="attr">name:</span> <span class="string">放弃测试</span> <span class="string">(SSO)</span>  </span><br><span class="line">    <span class="attr">content:</span> <span class="string">|  </span></span><br><span class="line"><span class="string">      目标 &#123;&#123;target_url&#125;&#125; 存在 SSO 强制认证，安全性较高，放弃测试。  </span></span><br><span class="line"><span class="string"></span>    <span class="attr">outputs:</span> []  </span><br><span class="line">  <span class="bullet">-</span> <span class="attr">id:</span> <span class="string">n4</span>  </span><br><span class="line">    <span class="attr">type:</span> <span class="string">action</span>  </span><br><span class="line">    <span class="attr">name:</span> <span class="string">自定义鉴权绕过</span>  </span><br><span class="line">    <span class="attr">content:</span> <span class="string">|  </span></span><br><span class="line"><span class="string">      目标 &#123;&#123;target_url&#125;&#125; 存在自定义鉴权。  </span></span><br><span class="line"><span class="string">      行为: 通过爆破、前端鉴权绕过等方式尝试绕过自定义鉴权，进入后台功能界面。爆破前可以使用 admin/admin 和 user/user 这种弱口令组合。  </span></span><br><span class="line"><span class="string">      将绕过尝试的结果总结输出到 &#x27;bypass_result&#x27; 变量中（可选值：Success, Fail）。  </span></span><br><span class="line"><span class="string">      工具建议: browser_navigate, browser_type, browser_click  </span></span><br><span class="line"><span class="string"></span>    <span class="attr">outputs:</span></span><br></pre></td></tr></table></figure>
+
+<p>Dify 和 n8n 这类工具是通用业务流程的自动化，它们的核心是连接不同的 API 和服务， APG 的目标是固化人类专家的思维路径，它是为驱动 AI Agent 进行复杂攻防推理而设计的。APG 的节点不是一个原子 API 调用，而是给 Agent 的一个高层任务指令（比如：“尝试绕过自定义鉴权”），<br> 我们要解决的问题是：如何让 Claude Code 严格按照专家经验定义的流程执行。自然语言描述的 Prompt 天生缺乏对执行路径的强制约束，Agent 可能会”理解”你的意图，但无法保证完全按照预期的步骤和分支逻辑执行。这就是为什么我们需要 APG——一种结构化的、可验证的意图表达方式。</p>
+<h2 id="工具调用"><a href="#工具调用" class="headerlink" title="工具调用"></a>工具调用</h2><p>使用 <code>@tool</code> 装饰器可以将任何 Python 函数转为 LLM 可调用的工具。LangChain 会自动将函数名和 docstring 传递给模型，让模型知道何时以及如何使用这个工具。<br> 在工程落地中，Tool 的定义，要让 Agent 准确理解并调用外部工具，业界目前依赖两大核心标准协议：<strong>底层数据格式标准（OpenAI Schema）</strong> 与 <strong>应用通信接入标准（MCP）</strong><br> OpenAI Schema的核心机制是基于 JSON Schema 的接口定义，LLM 在推理时只消费这部分 JSON Schema 来理解工具的功能边界，从而决定”是否调用”以及”如何填充参数</p>
+<h3 id="Function-Calling"><a href="#Function-Calling" class="headerlink" title="Function Calling"></a>Function Calling</h3><p>json<br> { “type”: “function”, “function”: { “name”: “query_slow_sql”, “description”: “查询指定微服务在特定时间段内的慢 SQL 日志。当需要排查服务响应慢、数据库查询超时或 CPU 异常飙升时调用。若用户询问的是网络或内存问题，请勿调用此工具。”, “parameters”: { “type”: “object”, “properties”: { “service_name”: { “type”: “string”, “description”: “待查询的服务名称，例如：user-service、order-service” }, “time_range”: { “type”: “string”, “description”: “查询时间范围，格式为 HH:MM-HH:MM，例如：09:00-09:30” }, “threshold_ms”: { “type”: “integer”, “description”: “慢 SQL 判定阈值（毫秒），默认为 1000，即超过 1 秒的查询视为慢 SQL” } }, “required”: [“service_name”, “time_range”] } } }</p>
+<hr>
+<p><a target="_blank" rel="noopener" href="https://javaguide.cn/ai/agent/agent-basis.html">https://javaguide.cn/ai/agent/agent-basis.html</a></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">这个传统的工具调用，将多个原子工具在代码层封装为高阶工具，对外暴露单一的 JSON Schema。LLM 只能看到函数签名和参数描述，但是现在，用==skill==举例，llm只读取一部分，直到真正确定调用的时候才将完整的内容注入上下文。</span><br><span class="line">通信接入层(==MCP==):相当于是工具起了一个server，外部系统通过这个server让LLM来调用工具，MCP Server 在向外暴露工具时，内部依然使用 JSON Schema 来描述每个工具的参数规范。也就是说，JSON Schema 是底层的数据格式基础，MCP 是在其之上构建的通信协议层</span><br></pre></td></tr></table></figure>
+
+<p>JSON Schema 只做一件事：<br> 描述工具调用接口</p>
+<p>MCP 做四件事</p>
+<ol>
+<li>工具管理 (Tools)</li>
+<li>资源管理 (Resources)  </li>
+<li>提示词管理 (Prompts)  </li>
+<li>内容流式传输</li>
+</ol>
+<h2 id="skills投毒"><a href="#skills投毒" class="headerlink" title="skills投毒"></a>skills投毒</h2><p>当 Skill 是 Markdown 并被渲染成 HTML 时，HTML 注释会在页面上不可见；但系统若把原始文本原封不动喂给模型 ，这些不可见内容仍会进入上下文，从而形成“人看不见、模型看得见”的指令盲区</p>
+<h1 id="针对移动端的自动化渗透流程"><a href="#针对移动端的自动化渗透流程" class="headerlink" title="针对移动端的自动化渗透流程"></a>针对移动端的自动化渗透流程</h1><p>移动端的测试，认证、授权和数据读取逻辑，往往分散在页面配置、初始化 HTML、框架加载器和组件脚本中。如果直接黑盒测试，比如让ai接一个bp的mcp，很容易在大量页面和接口里失焦，所以应该先从静态层面入手。注意的点，避免 AI 在证据不足时过度推断，可以用skill负责约束分析边界，要求先有代码证据、再做最小化验证。大部分的逻辑还需要低人工介入</p>
+<h1 id="面试内容"><a href="#面试内容" class="headerlink" title="面试内容"></a>面试内容</h1><p><img src="https://pic1.imgdb.cn/item/69f6e83698d7db9e97818a86.png"></p>
+<ol>
+<li><strong>非确定性</strong>：同样的 Prompt，下次生成的代码结构可能完全不同。</li>
+<li><strong>上下文遗忘</strong>：项目一旦变大，AI 记不住之前的逻辑，开始胡乱修改已有功能（Regression）</li>
+<li><strong>隐性债务</strong>：为了快速获得“Good Vibe”，AI 可能会引入极其拙劣的实现方式，而在不做深度 Review 时很难发现</li>
+<li>利用好Spec，定义总体目标，规范，然后细分到小的plan，开始执行，测试通过才算任务完成。<br>思考与执行分离,复杂任务不可能在单个上下文窗口内完成，需要 Orchestrator + Worker 分层架构，状态持久化到外部存储|</li>
+</ol>
+<h2 id="提示词注入"><a href="#提示词注入" class="headerlink" title="提示词注入"></a>提示词注入</h2><p>这是一个github copilot的rce<br> CVE-2025-53773:诱导ai修改.vscode&#x2F;settings.json，加入”chat.tools.autoApprove”: true<br> 会禁用所有用户确认 ，自动执行 shell命令(calc.exe&#x2F;Calculator)。<br> 后面修复之后，似乎只校验了文件名，插件对敏感文件路径检查时，使用的模式匹配仅考虑了小写字符，但是window平台文件路径不区分大小写，所以用大小写绕过<br> rce的利用方法也有变化，核心是这一行配置</p>
+<p>php.validate.executablePath”: “c:\windows\system32\calc.exe</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">这行是给 Vs Code 的 PHP 扩展 用的配置项，VS Code 里有个 PHP 扩展(或者内置的验证机制)</span><br><span class="line">它会在你编辑/保存 PHP 文件时，自动调用配置里的 php 可执行文件，去帮你做语法检查</span><br></pre></td></tr></table></figure>
+
+<p>这是默认的php解释器<br> php.validate.executablePath”:”c:\php\php.exe</p>
+<p>可以用sql注入来类比，在llm中攻击的对象变成了大语言模型的”理解逻辑”,造成这个问题的就是数据和指令共享同一个上下文窗口。<br> 提示词注入不是一个可以通过”说教”来修复的Bug。它是当前Transformer架构的固有特性——数据与指令在同一上下文中被无差别处理。真正的防御必须来自<strong>架构层面的隔离</strong>，而非仅仅依赖措辞，便于理解就是系统提示词和用户的输出都混在一个上下文，又不能控制模型的响应，所以用系统提示来防御没用<br> 越狱攻击:<br> Pasted image 20260418091508.png</p>
+<p>参考文章：<a target="_blank" rel="noopener" href="https://www.smallyoung.cn/docs/LLM%E6%8F%90%E7%A4%BA%E8%AF%8D%E6%B3%A8%E5%85%A5%E6%94%BB%E9%98%B2%E5%85%A8%E8%A7%A3%E6%9E%90">LLM提示词注入攻防全解析：真实事故案例与防御实践 | SmallYoung</a></p>
+<h2 id="防御思路"><a href="#防御思路" class="headerlink" title="防御思路"></a>防御思路</h2><p>具体的一个方向的防护措施还要根据实际使用场景来选择<br> seo投毒<br> 公开数据的投毒:限制信息的获取来源，然后如果是那种大规模的投毒，可以哈希去重一下，如果相同的内容不同的域名，就是有问题。</p>
+<p>提示词注入<br> Spotlighting：给数据贴标签<br> 核心思路是通过<strong>格式化标记</strong>帮助模型区分”指令”和”数据”(指令就是系统提示词，数据就是用户的输入)</p>
+<p>Dual-LLM模式：权限分离的架构设计<br> 将LLM系统分为两个权限层级，外部内容（网页、邮件、文档）<strong>只能进入非特权LLM</strong>，该LLM没有任何工具访问权限，非特权LLM的输出以<strong>结构化引用</strong>而非原始文本的方式传递给特权LLM，特权LLM只接受来自<strong>受信任来源</strong>（用户直接输入）的指令<br> 比如<br> <strong>何时选择Dual-LLM架构？</strong></p>
+<ul>
+<li>✅ AI Agent需要访问外部工具或互联网</li>
+<li>✅ 系统需要处理不受信任的用户上传内容</li>
+<li>✅ 安全合规要求高的金融&#x2F;医疗场景</li>
+<li>❌ 简单的单轮对话问答系统（过度设计）</li>
+<li>❌ 延迟敏感的实时应用（双LLM调用增加延迟）</li>
+</ul>
+<h1 id="一些需要思考的问题"><a href="#一些需要思考的问题" class="headerlink" title="一些需要思考的问题"></a>一些需要思考的问题</h1><p>怎么给 agent 拆任务它的完成度最高？哪些薄弱环节需要用 Skill 去强化？Agent 的执行流程和运行环境怎么设计？怎么让多个 agent 并行跑且不互相冲突？这些问题没有开箱即用的标准答案，取决于你的具体工作任务、场景，以及你对 agent 能力边界的理解。本质上，你是在和一种全新的协作对象磨合，找到最高效的配合方式。<br> 关于CTF的解题智能体，claudecode这种Coding Agent本质已经超越了一个“模型接口”，它是一个完成度极高的工程型智能体</p>
+<ul>
+<li>成熟、稳定的 Prompt 结构；</li>
+<li>自动化的工具调度与执行循环；</li>
+<li>近乎无感的上下文管理机制；</li>
+<li>对代码、文件系统、命令行的原生理解力</li>
+</ul>
+<p>看来要想写成一个完全体的Agent架构，就不能在这两个之中一个做出选择，应该分层发挥框架的特点，目前想到的是将工业化的 Agent（如 Claude Code）封装成一个“超级工具”，但是具体如何实现和规划层的langraph来交互，还是没想到解决方法。</p>
+<p>上层：战略与编排层 </p>
+<ul>
+<li><strong>核心职责</strong>：决策、规划、审计、沉淀。这是 Agent 的“大脑”和“灵魂”。</li>
+<li><strong>技术实现</strong>：使用 LangChain &#x2F; LangGraph 等框架，显式地定义业务逻辑、状态机、记忆结构和风控规则。</li>
+<li><strong>控制权</strong>：完全掌握在我们自己手中。</li>
+</ul>
+<p>下层：能力与执行层 </p>
+<ul>
+<li><strong>核心职责</strong>：高效、稳定地完成具体任务。这是 Agent 强有力的“双手”。</li>
+<li><strong>技术实现</strong>：将工业化的 Agent（如 Claude Code）封装成一个“超级工具”。</li>
+<li><strong>控制权</strong>：我们将具体的执行过程“外包”出去，只关心输入和输出。</li>
+</ul>
+<p>但是模型的更新换代和能力提升实在太快，正在逐渐吸收框架约 80% 的功能（智能体定义、消息路由、任务生命周期。但是还是要按照它现在的能力给他配上最好的轮子。</p>
+<p>p神的对aiagent工作流的看法<br> 但经过测试他发现，如果用此时的大模型来挖洞，挖出来大量是误报的问题，特别是对于大型项目分析起来还是很吃力，团队内部其实在做的完全是另一件事—使用AI来处理和运营传统SAST工具生产的漏洞<br> SAST工具是静态应用程序安全测试（Static Application Security Testing）工具的简称，它是一种白盒测试方法，通过在不执行程序的情况下分析源代码、字节码或二进制文件来识别安全漏洞<br> 只是让大模型审核我们传统SAST产出的漏洞报告，那就完全不一样了，大模型只需要跟着漏洞报告中说到的数据流进行分析就可以了，</p>
+<p>LLM最擅长的领域是 攻击手法有限、信息收集路径有限、决策空间天然收敛，这本质上就是一个 Harness，非常适合 LLM 的探索模式<br> 回到一面面试官问的安卓渗透agent的问题，但是安卓渗透并不是天然决策空间收敛，他只是比真实业务环境的web更可控，突发的情况更少，工程的型态明显有不同<br> 安卓渗透中输入给LLM的对象是一个apk，本质：程序分析问题（静态 + 动态），加上一些动态的抓包，而不是像web那样抓包放包有明确的response。<br> 强依赖工具，预处理层，静态分析，比如jadx（反编译)，收集基本的框架信息。在后面的代码分析部分可能需要阅读大量的代码或者反汇编之后的内容，类似于代码审计的场景，所以可以设计一个plan层(摘要层)，解决代码审计大量长任务和长上下文的方法，就是强结构化，多阶段分解，先用规划层和筛选层过滤出可疑的代码部分，再让最后的执行agent来具体分析，语义判断<br> 安卓渗透agent的渗透路径相对有限，但复杂，比如混淆，加壳</p>
+<h1 id="ChainReactor的agent思考"><a href="#ChainReactor的agent思考" class="headerlink" title="ChainReactor的agent思考"></a>ChainReactor的agent思考</h1><p>倾向于先实现一个通用场景的agent：意图理解、任务编排、状态管理、错误恢复、工具调度<br> 安全只是其中一个小场景，首先具备通用能力，才会具备强大的安全能力，为CTF特定场景造轮子的话，真实的渗透场景能力就会大大降低<br> 传统多 Agent 架构问题不在于数量，在于分工设计,之前的那个ctf解题agent的那种通识skill可以直接去掉了，但是poc和payload是必要的。</p>
+<p>AI无法识别错误并更改方向<br> Agent 会在同一个坑里挖十分钟——人看一眼就知道该换方向了，但 Agent 没有”一眼”这个概念。正常场景下 HITL（Human-in-the-Loop）是正解：人介入一下，成本清零</p>
+<h2 id="工程到底是不是负优化"><a href="#工程到底是不是负优化" class="headerlink" title="工程到底是不是负优化"></a>工程到底是不是负优化</h2><p>在yhy的第一版安全agent中，Orchestrator 调度子 Agent，Browser Agent 操作 Chrome，C2 Agent 做后渗透，Reverse Agent 做逆向。架构搞得挺复杂的。前几天做了个测试，用 Claude Code CLI 加一个 Playwright 浏览器插件，没有任何安全专用的 skills。测试的是 WIZ 云安全挑战赛的题目<br> 就用了cc这个CLI，什么安全知识库都没有，CHYing Agent 做了那么多——子 Agent 调度、MCP 隔离、上下文管理、RAG 检索——虽然使用 GLM5 半个小时也能做出来，之前某个版本 10 分钟做出来所以要想清楚一个问题，大多数人的工程优化很可能都是负优化，也还有一个原因，这些东西可能是适配去年第一届比赛时的模型水平的。那时候模型能力不够，需要你用工程手段去补。而现在模型进化太快了，很多我精心设计的”辅助逻辑”，对现在的模型来说反而是负优化——它自己本来能做到，你的框架反而在添乱，淚笑的想法就是不从头设计agent，而是调度 Codex、Claude Code 这些通用 Agent 来干活。底座用别人的，自己设计的是流程和调度策略。<br> 需要想清楚的一个问题是，模型能力的变强，加上这些工程机别的coding agent，会不会已经让专门设计一个垂直类 Agent 的价值变得很低了，我们需要的是一个通用的agent。<br> 调度就是要设计流程，用通用 Agent 做底座，重点放在：哪个环节用哪个模型、怎么在模型之间传递信息、什么时候需要人介入。DeepSeek 便宜但够用，Claude 贵但判断力强，人的价值在于知道什么时候该问什么。<br> 我需要改变之前的一个想法，基于cc或者codex来做执行层的话，外部接入一个顾问的框架来和cc本体的agent是有问题的，事实证明这样的效果并不好，实际上如果要对claudecode的执行约束就只能通过hook和prompt，这个方式的约束力是非常不足的</p>
+</article>
+
+
+
+
+
+
+
+
+
+<footer class="page-footer footnote"><hr><div class="text"></div></footer>
+<div class="main-mask" onclick="sidebar.dismiss()"></div></div><aside class="l_right">
+<div class="widgets">
+
+
+
+<widget class="widget-wrapper toc" id="data-toc" collapse="false"><div class="widget-header dis-select"><span class="name">本文目录</span><a class="cap-action" onclick="sidebar.toggleTOC()" ><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></a></div><div class="widget-body"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#RAG"><span class="toc-text">RAG</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%93%E4%B8%9A%E5%90%8D%E8%AF%8D"><span class="toc-text">专业名词</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RAG%E6%8A%95%E6%AF%92"><span class="toc-text">RAG投毒</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Agent%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86%E5%92%8C%E9%97%AE%E9%A2%98"><span class="toc-text">Agent基本原理和问题</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Agent-Loop"><span class="toc-text">Agent Loop</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ReAct"><span class="toc-text">ReAct</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Prompt-Engineering"><span class="toc-text">Prompt Engineering</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8C%BA%E5%88%86%E6%95%B0%E6%8D%AE%E5%92%8C%E6%8F%90%E7%A4%BA%E8%AF%8D"><span class="toc-text">区分数据和提示词</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Harness-Engineering"><span class="toc-text">Harness Engineering</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#A2A-%E5%8D%8F%E8%AE%AE"><span class="toc-text">A2A 协议</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Transformer-%E6%9E%B6%E6%9E%84%E7%AE%80%E6%9E%90"><span class="toc-text">Transformer 架构简析</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#LangGraph%E5%92%8Clangchain"><span class="toc-text">LangGraph和langchain</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#APG"><span class="toc-text">APG</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B7%A5%E5%85%B7%E8%B0%83%E7%94%A8"><span class="toc-text">工具调用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Function-Calling"><span class="toc-text">Function Calling</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#skills%E6%8A%95%E6%AF%92"><span class="toc-text">skills投毒</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%92%88%E5%AF%B9%E7%A7%BB%E5%8A%A8%E7%AB%AF%E7%9A%84%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B8%97%E9%80%8F%E6%B5%81%E7%A8%8B"><span class="toc-text">针对移动端的自动化渗透流程</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%9D%A2%E8%AF%95%E5%86%85%E5%AE%B9"><span class="toc-text">面试内容</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8F%90%E7%A4%BA%E8%AF%8D%E6%B3%A8%E5%85%A5"><span class="toc-text">提示词注入</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%98%B2%E5%BE%A1%E6%80%9D%E8%B7%AF"><span class="toc-text">防御思路</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E4%BA%9B%E9%9C%80%E8%A6%81%E6%80%9D%E8%80%83%E7%9A%84%E9%97%AE%E9%A2%98"><span class="toc-text">一些需要思考的问题</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#ChainReactor%E7%9A%84agent%E6%80%9D%E8%80%83"><span class="toc-text">ChainReactor的agent思考</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B7%A5%E7%A8%8B%E5%88%B0%E5%BA%95%E6%98%AF%E4%B8%8D%E6%98%AF%E8%B4%9F%E4%BC%98%E5%8C%96"><span class="toc-text">工程到底是不是负优化</span></a></li></ol></li></ol></div><div class="widget-footer"><a class="top" onclick="util.scrollTop()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5"><path stroke-linejoin="round" d="m9 15.5l3-3l3 3m-6-4l3-3l3 3"/><path d="M7 3.338A9.95 9.95 0 0 1 12 2c5.523 0 10 4.477 10 10s-4.477 10-10 10S2 17.523 2 12c0-1.821.487-3.53 1.338-5"/></g></svg><span>回到顶部</span></a></div></widget>
+</div></aside><div class='float-panel'>
+  <button type='button' style='display:none' class='laptop-only rightbar-toggle mobile' onclick='sidebar.rightbar()'>
+    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg>
+  </button>
+  <button type='button' style='display:none' class='mobile-only leftbar-toggle mobile' onclick='sidebar.leftbar()'>
+    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 11c0-3.771 0-5.657 1.172-6.828C4.343 3 6.229 3 10 3h4c3.771 0 5.657 0 6.828 1.172C22 5.343 22 7.229 22 11v2c0 3.771 0 5.657-1.172 6.828C19.657 21 17.771 21 14 21h-4c-3.771 0-5.657 0-6.828-1.172C2 18.657 2 16.771 2 13z"/><path id="sep" stroke-linecap="round" d="M5.5 10h6m-5 4h4m4.5 7V3"/></g></svg>
+  </button>
+</div>
+</div><div class="scripts">
+
+
+<script type="text/javascript">
+  window.canonical = {"originalHost":null,"officialHosts":["localhost"],"encoded":""};
+  const ctx = {
+    date_suffix: {
+      just: `刚刚`,
+      min: `分钟前`,
+      hour: `小时前`,
+      day: `天前`,
+    },
+    root : `/`,
+    tag_plugins: {
+      chat: Object.assign({"api":"https://siteinfo.listentothewind.cn/api/v1"}),
+    }
+  };
+
+  // required plugins (only load if needs)
+  if (`local_search`) {
+    ctx.search = {};
+    ctx.search.service = `local_search`;
+    if (ctx.search.service == 'local_search') {
+      let service_obj = Object.assign({}, `{"field":"all","path":"/search.json","content":true,"skip_search":null,"sort":"-date"}`);
+      ctx.search[ctx.search.service] = service_obj;
+    }
+  }
+  const def = {
+    avatar: `https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/avatar/round/3442075.svg`,
+    cover: `https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/cover/76b86c0226ffd.svg`,
+    loading: `https://api.iconify.design/eos-icons:three-dots-loading.svg?color=%231cd0fd`,
+  };
+  const deps = {
+    jquery: `https://gcore.jsdelivr.net/npm/jquery@3.7/dist/jquery.min.js`,
+    marked: `https://gcore.jsdelivr.net/npm/marked@13.0/lib/marked.umd.min.js`,
+    lazyload: `/%5Bobject%20Object%5D`
+  }
+  
+
+</script>
+
+<script type="text/javascript">
+  
+  function RunItem() {
+    this.list = []; // 存放回调函数
+    this.start = () => {
+      for (var i = 0; i < this.list.length; i++) {
+        this.list[i].run();
+      }
+    };
+    this.push = (fn, name, setRequestAnimationFrame = true) => {
+      let myfn = fn
+      if (setRequestAnimationFrame) {
+        myfn = () => {
+          utils.requestAnimationFrame(fn)
+        }
+      }
+      var f = new Item(myfn, name);
+      this.list.push(f);
+    };
+    this.remove = (name) => {
+      for (let index = 0; index < this.list.length; index++) {
+        const e = this.list[index];
+        if (e.name == name) {
+          this.list.splice(index, 1);
+        }
+      }
+    }
+    // 构造一个可以run的对象
+    function Item(fn, name) {
+      // 函数名称
+      this.name = name || fn.name;
+      // run方法
+      this.run = () => {
+        try {
+          fn()
+        } catch (error) {
+          console.log(error);
+        }
+      };
+    }
+  }
+
+  const utils = {
+    // 懒加载 css https://github.com/filamentgroup/loadCSS
+    css: (href, before, media, attributes) => {
+      var doc = window.document;
+      var ss = doc.createElement("link");
+      var ref;
+      if (before) {
+        ref = before;
+      } else {
+        var refs = (doc.body || doc.getElementsByTagName("head")[0]).childNodes;
+        ref = refs[refs.length - 1];
+      }
+      var sheets = doc.styleSheets;
+      if (attributes) {
+        for (var attributeName in attributes) {
+          if (attributes.hasOwnProperty(attributeName)) {
+            ss.setAttribute(attributeName, attributes[attributeName]);
+          }
+        }
+      }
+      ss.rel = "stylesheet";
+      ss.href = href;
+      ss.media = "only x";
+      function ready(cb) {
+        if (doc.body) {
+          return cb();
+        }
+        setTimeout(function () {
+          ready(cb);
+        });
+      }
+      ready(function () {
+        ref.parentNode.insertBefore(ss, before ? ref : ref.nextSibling);
+      });
+      var onloadcssdefined = function (cb) {
+        var resolvedHref = ss.href;
+        var i = sheets.length;
+        while (i--) {
+          if (sheets[i].href === resolvedHref) {
+            return cb();
+          }
+        }
+        setTimeout(function () {
+          onloadcssdefined(cb);
+        });
+      };
+      function loadCB() {
+        if (ss.addEventListener) {
+          ss.removeEventListener("load", loadCB);
+        }
+        ss.media = media || "all";
+      }
+      if (ss.addEventListener) {
+        ss.addEventListener("load", loadCB);
+      }
+      ss.onloadcssdefined = onloadcssdefined;
+      onloadcssdefined(loadCB);
+      return ss;
+    },
+
+    js: (src, opt) => new Promise((resolve, reject) => {
+      var script = document.createElement('script');
+      if (src.startsWith('/')) {
+        src = ctx.root + src.substring(1);
+      }
+      script.src = src;
+      if (opt) {
+        for (let key of Object.keys(opt)) {
+          script[key] = opt[key]
+        }
+      } else {
+        // 默认异步，如果需要同步，第二个参数传入 {} 即可
+        script.async = true
+      }
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function () {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    }),
+
+    jq: (fn) => {
+      if (typeof jQuery === 'undefined') {
+        utils.js(deps.jquery).then(fn)
+      } else {
+        fn()
+      }
+    },
+
+    onLoading: (el) => {
+      if (el) {
+        $(el).append('<div class="loading-wrap"><svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2"><path stroke-dasharray="60" stroke-dashoffset="60" stroke-opacity=".3" d="M12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3Z"><animate fill="freeze" attributeName="stroke-dashoffset" dur="1.3s" values="60;0"/></path><path stroke-dasharray="15" stroke-dashoffset="15" d="M12 3C16.9706 3 21 7.02944 21 12"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.3s" values="15;0"/><animateTransform attributeName="transform" dur="1.5s" repeatCount="indefinite" type="rotate" values="0 12 12;360 12 12"/></path></g></svg></div>');
+      }
+    },
+    onLoadSuccess: (el) => {
+      if (el) {
+        $(el).find('.loading-wrap').remove();
+      }
+    },
+    onLoadFailure: (el) => {
+      if (el) {
+        $(el).find('.loading-wrap svg').remove();
+        $(el).find('.loading-wrap').append('<svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path stroke-dasharray="60" stroke-dashoffset="60" d="M12 3L21 20H3L12 3Z"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.5s" values="60;0"/></path><path stroke-dasharray="6" stroke-dashoffset="6" d="M12 10V14"><animate fill="freeze" attributeName="stroke-dashoffset" begin="0.6s" dur="0.2s" values="6;0"/></path></g><circle cx="12" cy="17" r="1" fill="currentColor" fill-opacity="0"><animate fill="freeze" attributeName="fill-opacity" begin="0.8s" dur="0.4s" values="0;1"/></circle></svg>');
+        $(el).find('.loading-wrap').addClass('error');
+      }
+    },
+    request: (el, url, callback, onFailure) => {
+      const maxRetry = 3;
+      let retryCount = 0;
+
+      return new Promise((resolve, reject) => {
+        const load = () => {
+          utils.onLoading?.(el);
+
+          let timedOut = false;
+          const timeout = setTimeout(() => {
+            timedOut = true;
+            console.warn('[request] 超时:', url);
+
+            if (++retryCount >= maxRetry) {
+              utils.onLoadFailure?.(el);
+              onFailure?.();
+              reject('请求超时');
+            } else {
+              setTimeout(load, 1000);
+            }
+          }, 5000);
+
+          fetch(url).then(resp => {
+            if (timedOut) return;
+            clearTimeout(timeout);
+
+            if (!resp.ok) throw new Error('响应失败');
+            return resp;
+          }).then(data => {
+            if (timedOut) return;
+            utils.onLoadSuccess?.(el);
+            callback(data);
+            resolve(data);
+          }).catch(err => {
+            clearTimeout(timeout);
+            console.warn('[request] 错误:', err);
+
+            if (++retryCount >= maxRetry) {
+              utils.onLoadFailure?.(el);
+              onFailure?.();
+              reject(err);
+            } else {
+              setTimeout(load, 1000);
+            }
+          });
+        };
+
+        load();
+      });
+    },
+    requestWithoutLoading: (url, options = {}, maxRetry = 2, timeout = 5000) => {
+      return new Promise((resolve, reject) => {
+        let retryCount = 0;
+
+        const tryRequest = () => {
+          let timedOut = false;
+          const timer = setTimeout(() => {
+            timedOut = true;
+            if (++retryCount > maxRetry) reject('timeout');
+            else tryRequest();
+          }, timeout);
+
+          fetch(url, options)
+            .then(resp => {
+              clearTimeout(timer);
+              if (!resp.ok) throw new Error('bad response');
+              resolve(resp);
+            })
+            .catch(err => {
+              clearTimeout(timer);
+              if (++retryCount > maxRetry) reject(err);
+              else setTimeout(tryRequest, 500);
+            });
+        };
+
+        tryRequest();
+      });
+    },
+    /********************** requestAnimationFrame ********************************/
+    // 1、requestAnimationFrame 会把每一帧中的所有 DOM 操作集中起来，在一次重绘或回流中就完成，并且重绘或回流的时间间隔紧紧跟随浏览器的刷新频率，一般来说，这个频率为每秒60帧。
+    // 2、在隐藏或不可见的元素中，requestAnimationFrame 将不会进行重绘或回流，这当然就意味着更少的的 cpu，gpu 和内存使用量。
+    requestAnimationFrame: (fn) => {
+      if (!window.requestAnimationFrame) {
+        window.requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame;
+      }
+      window.requestAnimationFrame(fn)
+    },
+    dark: {},
+  };
+
+  // utils.dark.mode 当前模式 dark or light
+  // utils.dark.toggle() 暗黑模式触发器
+  // utils.dark.push(callBack[,"callBackName"]) 传入触发器回调函数
+  utils.dark.method = {
+    toggle: new RunItem(),
+  };
+  utils.dark = Object.assign(utils.dark, {
+    push: utils.dark.method.toggle.push,
+  });
+</script>
+<script>
+  const sidebar = {
+    leftbar: () => {
+      if (l_body) {
+        l_body.toggleAttribute('leftbar');
+        l_body.removeAttribute('rightbar');
+      }
+    },
+    rightbar: () => {
+      if (l_body) {
+        l_body.toggleAttribute('rightbar');
+        l_body.removeAttribute('leftbar');
+      }
+    },
+    dismiss: () => {
+      if (l_body) {
+        l_body.removeAttribute('leftbar');
+        l_body.removeAttribute('rightbar');
+      }
+    },
+    toggleTOC: () => {
+      document.querySelector('#data-toc').classList.toggle('collapse');
+    }
+  }
+</script>
+<script type="text/javascript">
+  (() => {
+    const tagSwitchers = document.querySelectorAll('.tag-subtree.parent-tag > a > .tag-switcher-wrapper')
+    for (const tagSwitcher of tagSwitchers) {
+      tagSwitcher.addEventListener('click', (e) => {
+        const parent = e.target.closest('.tag-subtree.parent-tag')
+        parent.classList.toggle('expanded')
+        e.preventDefault()
+      })
+    }
+
+    // Get active tag from query string, then activate it.
+    const urlParams = new URLSearchParams(window.location.search)
+    const activeTag = urlParams.get('tag')
+    if (activeTag) {
+      let tag = document.querySelector(`.tag-subtree[data-tag="${activeTag}"]`)
+      if (tag) {
+        tag.querySelector('a').classList.add('active')
+        
+        while (tag) {
+          tag.classList.add('expanded')
+          tag = tag.parentElement.closest('.tag-subtree.parent-tag')
+        }
+      }
+    }
+  })()
+</script>
+
+<script async src="https://gcore.jsdelivr.net/npm/vanilla-lazyload@19.1/dist/lazyload.min.js"></script>
+<script>
+  // https://www.npmjs.com/package/vanilla-lazyload
+  // Set the options globally
+  // to make LazyLoad self-initialize
+  window.lazyLoadOptions = {
+    elements_selector: ".lazy",
+    callback_loaded: (el) => {
+      el.classList.add('loaded');
+      const wrapper = el.closest('.lazy-box');
+      const icon = wrapper?.querySelector('.lazy-icon');
+      if (icon) icon.remove();
+    }
+  };
+  // Listen to the initialization event
+  // and get the instance of LazyLoad
+  window.addEventListener(
+    "LazyLoad::Initialized",
+    function (event) {
+      window.lazyLoadInstance = event.detail.instance;
+    },
+    false
+  );
+  document.addEventListener('DOMContentLoaded', function () {
+    window.lazyLoadInstance?.update();
+  });
+
+  window.wrapLazyloadImages = (container) => {
+    if (typeof container === 'string') {
+      container = document.querySelector(container);
+    }
+    if (!container) return;
+    
+    const images = container.querySelectorAll('img');
+    images.forEach((img) => {
+      if (img.classList.contains('lazy')) return;
+
+      const src = img.getAttribute('src');
+      if (!src) return;
+
+      const wrapper = document.createElement('div');
+      wrapper.className = 'lazy-box';
+
+      const newImg = img.cloneNode();
+      newImg.removeAttribute('src');
+      newImg.setAttribute('data-src', src);
+      newImg.classList.add('lazy');
+
+      const icon = document.createElement('div');
+      icon.className = 'lazy-icon';
+      if (def.loading) {
+        icon.style.backgroundImage = `url("${def.loading}")`;
+      }
+
+      wrapper.appendChild(newImg);
+      wrapper.appendChild(icon);
+
+      img.replaceWith(wrapper);
+    });
+
+    // 通知 LazyLoad 更新
+    if (window.lazyLoadInstance?.update) {
+      window.lazyLoadInstance.update();
+    }
+  }
+  
+</script>
+
+<!-- required -->
+<script src="/js/main.js?v=1.33.1" defer></script>
+
+<script type="text/javascript">
+  const applyTheme = (theme) => {
+    if (theme === 'auto') {
+      document.documentElement.removeAttribute('data-theme')
+    } else {
+      document.documentElement.setAttribute('data-theme', theme)
+    }
+
+    // applyThemeToGiscus(theme)
+  }
+
+  // FIXME: 这会导致无法使用 preferred_color_scheme 以外的主题
+  const applyThemeToGiscus = (theme) => {
+    // theme = theme === 'auto' ? 'preferred_color_scheme' : theme
+    const cmt = document.getElementById('giscus')
+    if (cmt) {
+      // This works before giscus load.
+      cmt.setAttribute('data-theme', theme)
+    }
+
+    const iframe = document.querySelector('#comments > section.giscus > iframe')
+    if (iframe) {
+      // This works after giscus loaded.
+      const src = iframe.src
+      const newSrc = src.replace(/theme=[\w]+/, `theme=${theme}`)
+      iframe.src = newSrc
+    }
+  }
+
+  const switchTheme = () => {
+    // light -> dark -> auto -> light -> ...
+    const currentTheme = document.documentElement.getAttribute('data-theme')
+    let newTheme;
+    switch (currentTheme) {
+      case 'light':
+        newTheme = 'dark'
+        break
+      case 'dark':
+        newTheme = 'auto'
+        break
+      default:
+        newTheme = 'light'
+    }
+    applyTheme(newTheme)
+    window.localStorage.setItem('Stellar.theme', newTheme)
+    utils.dark.mode = newTheme === 'auto' ? (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light") : newTheme;
+    utils.dark.method.toggle.start();
+
+    const messages = {
+      light: `切换到浅色模式`,
+      dark: `切换到深色模式`,
+      auto: `切换到跟随系统配色`,
+    }
+    hud?.toast?.(messages[newTheme])
+  }
+
+  (() => {
+    // Apply user's preferred theme, if any.
+    const theme = window.localStorage.getItem('Stellar.theme')
+    if (theme !== null) {
+      applyTheme(theme)
+    } else {
+      utils.dark.mode = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    }
+    utils.dark.method.toggle.start();
+  })()
+</script>
+
+
+<!-- optional -->
+
+
+
+<script defer>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    ctx.services = Object.assign({}, JSON.parse(`{"mdrender":{"js":"/js/services/mdrender.js"},"siteinfo":{"js":"/js/services/siteinfo.js","api":null},"ghinfo":{"js":"/js/services/ghinfo.js"},"rating":{"js":"/js/services/rating.js","api":"https://star-vote.xaox.cc/api/rating"},"vote":{"js":"/js/services/vote.js","api":"https://star-vote.xaox.cc/api/vote"},"sites":{"js":"/js/services/sites.js"},"friends":{"js":"/js/services/friends.js"},"friends_and_posts":{"js":"/js/services/friends_and_posts.js"},"timeline":{"js":"/js/services/timeline.js"},"fcircle":{"js":"/js/services/fcircle.js"},"weibo":{"js":"/js/services/weibo.js"},"memos":{"js":"/js/services/memos.js"},"voice":{"js":"/js/plugins/voice.js"},"video":{"js":"/js/plugins/video.js"},"download-file":{"js":"/js/plugins/download-file.js"},"twikoo":{"js":"/js/services/twikoo_latest_comment.js"},"waline":{"js":"/js/services/waline_latest_comment.js"},"artalk":{"js":"/js/services/artalk_latest_comment.js"},"giscus":{"js":"/js/services/giscus_latest_comment.js"},"contributors":{"edit_this_page":{"_posts/":null,"wiki/stellar/":"https://github.com/xaoxuu/hexo-theme-stellar-docs/blob/main/"},"js":"/js/services/contributors.js"}}`));
+    for (let id of Object.keys(ctx.services)) {
+      const js = ctx.services[id].js;
+      if (id == 'siteinfo') {
+        ctx.cardlinks = document.querySelectorAll('a.link-card[cardlink]');
+        if (ctx.cardlinks?.length > 0) {
+          utils.js(js, { defer: true }).then(function () {
+            setCardLink(ctx.cardlinks);
+          });
+        }
+      } else if (id == 'voice') {
+        ctx.voiceAudios = document.querySelectorAll('.voice>audio');
+        if (ctx.voiceAudios?.length > 0) {
+          utils.js(js, { defer: true }).then(function () {
+            createVoiceDom(ctx.voiceAudios);
+          });
+        }
+      } else if (id == 'video') {
+        ctx.videos = document.querySelectorAll('.video>video');
+        if (ctx.videos?.length > 0) {
+          utils.js(js, { defer: true }).then(function () {
+            videoEvents(ctx.videos);
+          });
+        }
+      } else if (id == 'download-file') {
+        ctx.files = document.querySelectorAll('.file');
+        if (ctx.files?.length > 0) {
+          utils.js(js, { defer: true }).then(function () {
+            downloadFileEvent(ctx.files);
+          });
+        }
+      } else {
+        const els = document.getElementsByClassName(`ds-${id}`);
+        if (els?.length > 0) {
+          utils.jq(() => {
+            if (id == 'timeline' || 'memos' || 'marked') {
+              utils.js(deps.marked).then(function () {
+                utils.js(js, { defer: true });
+              });
+            } else {
+              utils.js(js, { defer: true });
+            }
+          });
+        }
+      }
+    }
+
+    // chat iphone time
+    let phoneTimes = document.querySelectorAll('.chat .status-bar .time');
+
+    if (phoneTimes.length > 0) {
+      NowTime();
+      var date = new Date();
+      var sec = date.getSeconds();
+      var firstAdjustInterval = setInterval(firstAdjustTime, 1000 * (60 - sec));
+    }
+
+    function firstAdjustTime() {
+      NowTime();
+      clearInterval(firstAdjustInterval);
+      setInterval(NowTime, 1000 * 60);
+    }
+
+    function NowTime() {
+      for (let i = 0; i < phoneTimes.length; ++i) {
+        var timeSpan = phoneTimes[i];
+        var date = new Date();
+        var hour = date.getHours();
+        var min = date.getMinutes();
+        timeSpan.innerHTML = check(hour) + ":" + check(min);
+      }
+    };
+
+    function check(val) {
+      if (val < 10) {
+        return ("0" + val);
+      }
+      return (val);
+    }
+
+    // chat quote
+    const chat_quote_obverser = new IntersectionObserver((entries, observer) => {
+      entries.filter((entry) => { return entry.isIntersecting }).sort((a, b) => a.intersectionRect.y !== b.intersectionRect.y ? a.intersectionRect.y - b.intersectionRect.y : a.intersectionRect.x - b.intersectionRect.x).forEach((entry, index) => {
+          observer.unobserve(entry.target);
+          setTimeout(() => {
+            entry.target.classList.add('quote-blink');
+            setTimeout(() => {
+              entry.target.classList.remove('quote-blink');
+            }, 1000);
+          }, Math.max(100, 16) * (index + 1));
+        });
+    });
+
+    var chatQuotes = document.querySelectorAll(".chat .talk .quote");
+    chatQuotes.forEach((quote) => {
+      quote.addEventListener('click', function () {
+        var chatCellDom = document.getElementById("quote-" + quote.getAttribute("quotedCellTag"));
+        if (chatCellDom) {
+          var chatDiv = chatCellDom.parentElement;
+          var mid = chatDiv.clientHeight / 2;
+          var offsetTop = chatCellDom.offsetTop;
+          if (offsetTop > mid - chatCellDom.clientHeight / 2) {
+            chatDiv.scrollTo({
+              top: chatCellDom.offsetTop - mid + chatCellDom.clientHeight / 2,
+              behavior: "smooth"
+            });
+          } else {
+            chatDiv.scrollTo({
+              top: 0,
+              behavior: "smooth"
+            });
+          }
+          chat_quote_obverser.observe(chatCellDom);
+        }
+      });
+    });
+  });
+</script>
+
+<script>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    ctx.search = {
+      path: `/search.json`,
+    }
+    utils.js('/js/search/local-search.js', { defer: true });
+  });
+</script><script>
+  window.FPConfig = {
+    delay: 0,
+    ignoreKeywords: [],
+    maxRPS: 5,
+    hoverDelay: 25
+  };
+</script>
+<script defer src="https://gcore.jsdelivr.net/npm/flying-pages@2/flying-pages.min.js"></script><script>
+  ctx.fancybox = {
+    selector: `.timenode p>img`,
+    css: `https://gcore.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.css`,
+    js: `https://gcore.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js`
+  };
+  var selector = '[data-fancybox]:not(.error), .with-fancybox .atk-content img:not([atk-emoticon])';
+  if (ctx.fancybox.selector) {
+    selector += `, ${ctx.fancybox.selector}`
+  }
+  var needFancybox = document.querySelectorAll(selector).length !== 0;
+  if (!needFancybox) {
+    const memos = document.getElementsByClassName('ds-memos');
+    if (memos != undefined && memos.length > 0) {
+      needFancybox = true;
+    }
+    const fancybox = document.getElementsByClassName('with-fancybox');
+    if (fancybox != undefined && fancybox.length > 0) {
+      needFancybox = true;
+    }
+  }
+  if (needFancybox) {
+    utils.css(ctx.fancybox.css);
+    utils.js(ctx.fancybox.js, { defer: true }).then(function () {
+      Fancybox.bind(selector, {
+        hideScrollbar: false,
+        Thumbs: {
+          autoStart: false,
+        },
+        caption: (fancybox, slide) => {
+          return slide.triggerEl.alt || slide.triggerEl.dataset.caption || null
+        }
+      });
+    })
+  }
+</script>
+<script>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    const swiper_api = document.getElementById('swiper-api');
+    if (swiper_api != undefined) {
+      utils.css(`https://unpkg.com/swiper@10.3/swiper-bundle.min.css`);
+      utils.js(`https://unpkg.com/swiper@10.3/swiper-bundle.min.js`, { defer: true }).then(function () {
+        const effect = swiper_api.getAttribute('effect') || '';
+        var swiper = new Swiper('.swiper#swiper-api', {
+          slidesPerView: 'auto',
+          spaceBetween: 8,
+          centeredSlides: true,
+          effect: effect,
+          rewind: true,
+          pagination: {
+            el: '.swiper-pagination',
+            clickable: true,
+          },
+          navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+          },
+        });
+      })
+    }
+  });
+</script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    window.codeElements = document.querySelectorAll('.code');
+    if (window.codeElements.length > 0) {
+      ctx.copycode = {
+        default_text: `Copy`,
+        success_text: `Copied`,
+        toast: `复制成功`,
+      };
+      utils.js('/js/plugins/copycode.js');
+    }
+  });
+</script>
+
+
+<!-- inject -->
+
+</div><!-- hexo injector body_end start -->
+<script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div style="text-align: center; padding: 16px 0; font-size: 13px; color: var(--text-a3);">
+  <span id="busuanzi_container_site_pv">访问 <span id="busuanzi_value_site_pv"></span></span>
+  <span style="margin: 0 8px;">·</span>
+  <span id="busuanzi_container_site_uv">访客 <span id="busuanzi_value_site_uv"></span></span>
+  <span style="margin: 0 8px;">·</span>
+  <span>运行 <span id="runtime-days"></span> 天</span>
+</div>
+<script>
+(function() {
+  var startDate = new Date('2026-01-01');
+  function updateRuntime() {
+    var diff = new Date() - startDate;
+    document.getElementById('runtime-days').textContent = Math.floor(diff / (1000 * 60 * 60 * 24));
+  }
+  updateRuntime();
+})();
+</script>
+<!-- hexo injector body_end end --></body></html>
