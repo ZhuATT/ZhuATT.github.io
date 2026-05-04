@@ -20,9 +20,20 @@
   <title>ZhuATT</title>
 
   
-  <meta name="description" content="this is my blog">
+    <meta name="description" content="个人博客">
+<meta property="og:type" content="website">
+<meta property="og:title" content="ZhuATT">
+<meta property="og:url" content="https://yixuan7.top/">
+<meta property="og:site_name" content="ZhuATT">
+<meta property="og:description" content="个人博客">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:author" content="ZhuATT">
+<meta property="article:tag" content="Agent, AI安全, 渗透测试, CTF, 网络安全">
+<meta name="twitter:card" content="summary">
   
   
+  
+  <meta name="keywords" content="Agent, AI安全, 渗透测试, CTF, 网络安全">
 
   <!-- feed -->
   
@@ -36,7 +47,7 @@
 
   
 
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Website","@id":"http://ZhuATT.github.io","author":{"@type":"Person","name":"ZhuATT","sameAs":[]},"name":"ZhuATT","description":"this is my blog","url":"http://ZhuATT.github.io"}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Website","@id":"https://yixuan7.top","author":{"@type":"Person","name":"ZhuATT","sameAs":[]},"name":"ZhuATT","description":"个人博客","url":"https://yixuan7.top","keywords":"Agent, AI安全, 渗透测试, CTF, 网络安全"}</script>
   
 </head>
 <body>
@@ -789,12 +800,49 @@
 
 </div><!-- hexo injector body_end start -->
 <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-<div style="text-align: center; padding: 16px 0; font-size: 13px; color: var(--text-a3);">
-  <span id="busuanzi_container_site_pv">访问 <span id="busuanzi_value_site_pv"></span></span>
-  <span style="margin: 0 8px;">·</span>
-  <span id="busuanzi_container_site_uv">访客 <span id="busuanzi_value_site_uv"></span></span>
-  <span style="margin: 0 8px;">·</span>
-  <span>运行 <span id="runtime-days"></span> 天</span>
+<style>
+.site-stats {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 16px 0;
+  margin: 12px 0;
+  font-size: 12px;
+}
+.site-stats .stat-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.site-stats .stat-label {
+  color: var(--text-a3);
+}
+.site-stats .stat-value {
+  background: var(--block);
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-weight: 500;
+  color: var(--text-a1);
+  min-width: 24px;
+  text-align: center;
+}
+</style>
+<div class="site-stats">
+  <span class="stat-item">
+    <span class="stat-label">访客数</span>
+    <span class="stat-value" id="busuanzi_value_site_uv">0</span>
+  </span>
+  <span class="stat-item">
+    <span class="stat-label">访问量</span>
+    <span class="stat-value" id="busuanzi_value_site_pv">0</span>
+  </span>
+  <span class="stat-item">
+    <span class="stat-label">运行</span>
+    <span class="stat-value" id="runtime-days">0</span>
+    <span class="stat-label">天</span>
+  </span>
 </div>
 <script>
 (function() {
