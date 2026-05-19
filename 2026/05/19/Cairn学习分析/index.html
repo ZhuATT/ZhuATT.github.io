@@ -1,0 +1,1011 @@
+
+<!DOCTYPE html><html lang="zh-CN">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="hexo-theme" content="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.33.1" theme-name="Stellar" theme-version="1.33.1">
+  
+  
+  <meta name="generator" content="Hexo 8.1.1">
+  <meta http-equiv='x-dns-prefetch-control' content='on' />
+  
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True" >
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#000">
+  <meta name="theme-color" content="#f9fafb">
+  <title>Cairn学习分析 - ZhuATT</title>
+
+  
+    <meta name="description" content="项目架构oritera&#x2F;Cairn: A AI general-purpose state-space search engine, validated first on autonomous penetration testing. 总的来看，这个架构是把整个任务的执行过程定了一个起点和终点，看成一个有向无环图 灵感来源于黑板架构，不同的agent的工作都源于这个共享的黑板，它们之间不">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Cairn学习分析">
+<meta property="og:url" content="https://yixuan7.top/2026/05/19/Cairn%E5%AD%A6%E4%B9%A0%E5%88%86%E6%9E%90/">
+<meta property="og:site_name" content="ZhuATT">
+<meta property="og:description" content="项目架构oritera&#x2F;Cairn: A AI general-purpose state-space search engine, validated first on autonomous penetration testing. 总的来看，这个架构是把整个任务的执行过程定了一个起点和终点，看成一个有向无环图 灵感来源于黑板架构，不同的agent的工作都源于这个共享的黑板，它们之间不">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://mintcdn.com/claude-code/nsvRFSDNfpSU5nT7/images/subagents-vs-agent-teams-dark.png?w=1650&fit=max&auto=format&n=nsvRFSDNfpSU5nT7&q=85&s=8e74b42694e428570e876d34f29e6ad6">
+<meta property="article:published_time" content="2026-05-19T02:59:22.000Z">
+<meta property="article:modified_time" content="2026-05-19T03:12:26.489Z">
+<meta property="article:author" content="ZhuATT">
+<meta property="article:tag" content="Agent">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://mintcdn.com/claude-code/nsvRFSDNfpSU5nT7/images/subagents-vs-agent-teams-dark.png?w=1650&fit=max&auto=format&n=nsvRFSDNfpSU5nT7&q=85&s=8e74b42694e428570e876d34f29e6ad6">
+  
+  
+  
+  <meta name="keywords" content="Agent">
+
+  <!-- feed -->
+  
+
+  <link rel="stylesheet" href="/css/main.css?v=1.33.1">
+
+
+  
+    <link rel="shortcut icon" href="/favicon.ico">
+  
+
+  
+
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"ZhuATT","sameAs":[]},"dateCreated":"2026-05-19T10:59:22+08:00","dateModified":"2026-05-19T11:12:26+08:00","datePublished":"2026-05-19T10:59:22+08:00","description":"","headline":"Cairn学习分析","mainEntityOfPage":{"@type":"WebPage","@id":"https://yixuan7.top/2026/05/19/Cairn%E5%AD%A6%E4%B9%A0%E5%88%86%E6%9E%90/"},"publisher":{"@type":"Organization","name":"ZhuATT","sameAs":[]},"url":"https://yixuan7.top/2026/05/19/Cairn%E5%AD%A6%E4%B9%A0%E5%88%86%E6%9E%90/","keywords":"Agent","thumbnailUrl":"https://pic1.imgdb.cn/item/6a0bd456febbe1263e71b4f5.png","image":1}</script>
+  
+</head>
+<body>
+
+<div class="l_body content" id="start" layout="post" type="tech" ><aside class="l_left"><div class="sidebg"></div><div class="leftbar-container">
+
+
+<header class="header"><div class="logo-wrap"><a class="avatar" href="/about/"><div class="bg" style="opacity:0;background-image:url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="https://pic1.imgdb.cn/item/69f6db9898d7db9e9781617b.jpg" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/image/2659360.svg';"></a><a class="title" href="/"><div class="main">ZhuATT</div></a></div></header>
+
+<div class="nav-area">
+
+<nav class="menu dis-select"></nav>
+</div>
+<div class="widgets">
+<div class="search-wrapper" id="search-wrapper"><form class="search-form"><a class="search-button" onclick="document.getElementById(&quot;search-input&quot;).focus();"><svg t="1705074644177" viewBox="0 0 1025 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1560" width="200" height="200"><path d="M1008.839137 935.96571L792.364903 719.491476a56.783488 56.783488 0 0 0-80.152866 0 358.53545 358.53545 0 1 1 100.857314-335.166073 362.840335 362.840335 0 0 1-3.689902 170.145468 51.248635 51.248635 0 1 0 99.217358 26.444296 462.057693 462.057693 0 1 0-158.255785 242.303546l185.930047 185.725053a51.248635 51.248635 0 0 0 72.568068 0 51.248635 51.248635 0 0 0 0-72.978056z" p-id="1561"></path><path d="M616.479587 615.969233a50.428657 50.428657 0 0 0-61.498362-5.534852 174.655348 174.655348 0 0 1-177.525271 3.484907 49.403684 49.403684 0 0 0-58.833433 6.76482l-3.074918 2.869923a49.403684 49.403684 0 0 0 8.609771 78.10292 277.767601 277.767601 0 0 0 286.992355-5.739847 49.403684 49.403684 0 0 0 8.404776-76.667958z" p-id="1562"></path></svg></a><input type="text" class="search-input" id="search-input" placeholder="站内搜索"></form><div id="search-result"></div><div class="search-no-result">没有找到内容！</div></div>
+
+
+
+<widget class="widget-wrapper recent post-list"><div class="widget-header dis-select"><span class="name">最近更新</span></div><div class="widget-body fs14"><a class="item title" href="/2026/05/19/Cairn%E5%AD%A6%E4%B9%A0%E5%88%86%E6%9E%90/"><span class="title">Cairn学习分析</span></a><a class="item title" href="/2025/12/28/2025-Ciscn-and-%E9%95%BF%E5%9F%8E%E6%9D%AF%E5%88%9D%E8%B5%9B/"><span class="title">2025 Ciscn and 长城杯初赛wp</span></a><a class="item title" href="/2026/04/28/%E8%AF%BE%E7%A8%8B%E8%A1%A8uni-app%E7%9A%84%E9%80%86%E5%90%91%E5%88%86%E6%9E%90/"><span class="title">课程表uni-app的逆向分析</span></a><a class="item title" href="/2026/05/03/AGENT-s-Note/"><span class="title">AGENT's Note</span></a></div></widget>
+</div>
+<footer class="footer dis-select"><div class="social-wrap"><a class="social" href="https://github.com/ZhuATT" target="_blank" rel="external nofollow noopener noreferrer"><img src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/08a41b181ce68.svg"/></a></div></footer>
+</div></aside><div class="l_main" id="main">
+
+
+
+
+
+<div class="article banner top"><img class="lazy bg" data-src="https://pic1.imgdb.cn/item/6a0bd456febbe1263e71b4f5.png">
+  <div class="content">
+    <div class="top bread-nav footnote"><div class="left"><div class="flex-row" id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a>
+<span class="sep"></span><a class="cap breadcrumb" href="/">文章</a><span class="sep"></span><a class="cap breadcrumb-link" href="/categories/AIsec/">AIsec</a></div>
+<div class="flex-row" id="post-meta"><span class="text created">发布于：<time datetime="2026-05-19T02:59:22.000Z">2026-05-19</time></span><span class="sep updated"></span><span class="text updated">更新于：<time datetime="2026-05-19T03:12:26.489Z">2026-05-19</time></span></div></div></div>
+    
+    <div class="bottom only-title">
+      
+      <div class="text-area">
+        <h1 class="text title"><span>Cairn学习分析</span></h1>
+        
+      </div>
+    </div>
+    
+  </div>
+  </div><article class="md-text content"><h1 id="项目架构"><a href="#项目架构" class="headerlink" title="项目架构"></a>项目架构</h1><p><a target="_blank" rel="noopener" href="https://github.com/oritera/Cairn">oritera&#x2F;Cairn: A AI general-purpose state-space search engine, validated first on autonomous penetration testing.</a><br> 总的来看，这个架构是把整个任务的执行过程定了一个起点和终点，看成一个有向无环图<br> 灵感来源于黑板架构，不同的agent的工作都源于这个共享的黑板，它们之间不直接通信，像现在的多智能题的架构的A2A通信，但是可以根据工作中的发现或者进展来改变共享环境的内容。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">┌──────────────────────────────────┐</span><br><span class="line">│           <span class="title class_">Cairn</span> <span class="title class_">Server</span>           │</span><br><span class="line">│    <span class="title class_">Facts</span> + <span class="title class_">Intents</span> + <span class="title class_">Hints</span>       │</span><br><span class="line">└─────────────────┬────────────────┘</span><br><span class="line">                  │</span><br><span class="line">           <span class="title class_">Read</span> / <span class="title class_">Write</span> <span class="variable constant_">API</span></span><br><span class="line">                  │</span><br><span class="line">┌─────────────────┴────────────────┐</span><br><span class="line">│             <span class="title class_">Dispatcher</span>           │</span><br><span class="line">│   调度任务 / 管理容器 / 写协议       │</span><br><span class="line">└──────────┬───────────────┬───────┘</span><br><span class="line">           │               │</span><br><span class="line">   ┌───────┴────┐   ┌──────┴────────┐</span><br><span class="line">   │ <span class="title class_">Container</span>  │   │  <span class="title class_">Container</span>    │</span><br><span class="line">   │ (<span class="title class_">Project</span> A)│   │ (<span class="title class_">Project</span> B)   │</span><br><span class="line">   │  <span class="title class_">Workers</span>   │   │   <span class="title class_">Workers</span>     │</span><br><span class="line">   └────────────┘   └───────────────┘</span><br></pre></td></tr></table></figure>
+
+<h2 id="claudecode的多智能体架构"><a href="#claudecode的多智能体架构" class="headerlink" title="claudecode的多智能体架构"></a>claudecode的多智能体架构</h2><p>第一类是subagent，一个你派去执行专门任务的子agent。<br> 官方文档写的是当一个辅助任务会用搜索结果、日志或文件内容充斥您的主对话，而您不会再次引用这些内容时，请使用一个 subagent，用superpower写代码的时候也会遇见让你选择subagent执行或者单session，在这个终端里面依次执行任务。<br> Subagent的特点是在自己的 context window 中运行，不和主agent共享上下文，就是不和主agent通信，sub执行任务的结果会返回给主agent,直接注入主agent的上下文</p>
+<p>第二类是Agent teams，是直接开几个不同的cc实例，独立工作，每个都在自己的 context window 中，并直接相互通信，生成时，队友加载与常规会话相同的项目 context：CLAUDE.md、MCP servers 和 skills。<br> <img src="https://mintcdn.com/claude-code/nsvRFSDNfpSU5nT7/images/subagents-vs-agent-teams-dark.png?w=1650&fit=max&auto=format&n=nsvRFSDNfpSU5nT7&q=85&s=8e74b42694e428570e876d34f29e6ad6" alt="img"></p>
+<h2 id="Cairn-Server"><a href="#Cairn-Server" class="headerlink" title="Cairn Server"></a>Cairn Server</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">cairn/src/cairn/server/</span><br><span class="line">├── __init__.py</span><br><span class="line">├── app.py           # FastAPI 应用入口</span><br><span class="line">├── db.py            # 数据库层</span><br><span class="line">├── models.py        # Pydantic 数据模型</span><br><span class="line">├── services.py      # 主要逻辑</span><br><span class="line">└── routers/</span><br><span class="line">    ├── projects.py  # 项目相关 API</span><br><span class="line">    ├── intents.py   # Intent 相关 API</span><br><span class="line">    ├── hints.py     # Hint 相关 API</span><br><span class="line">    ├── export.py    # 导出功能</span><br><span class="line">    └── settings.py  # 全局设置</span><br></pre></td></tr></table></figure>
+
+<p>路径cairn&#x2F;src&#x2F;cairn&#x2F;server&#x2F;</p>
+<h3 id="Fact"><a href="#Fact" class="headerlink" title="Fact"></a>Fact</h3><p>facts是节点，代表一个agent发现的信息或者解题线索，只有描述文本，没有状态标记。只增不改，永久保留，每个 Project 有两个特殊 Fact，在 Project 创建时写入</p>
+<h3 id="intent"><a href="#intent" class="headerlink" title="intent"></a>intent</h3><p>Intent是边，连接不同的fact，这个边是要被worker认领去执行,执行完成的标志就是产出了结论Fact</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Intent</span>(<span class="title class_ inherited__">BaseModel</span>):</span><br><span class="line">    <span class="built_in">id</span>: <span class="built_in">str</span>                           <span class="comment"># Intent 的唯一标识</span></span><br><span class="line">    from_: <span class="built_in">list</span>[<span class="built_in">str</span>] = Field(alias=<span class="string">&quot;from&quot;</span>)  <span class="comment"># 源 Fact ID 列表（支持多个）</span></span><br><span class="line">    to: <span class="built_in">str</span> | <span class="literal">None</span> = <span class="literal">None</span>            <span class="comment"># 目标 Fact ID（结论）</span></span><br><span class="line">    description: <span class="built_in">str</span>                  <span class="comment"># 探索方向的描述</span></span><br><span class="line">    creator: <span class="built_in">str</span>                      <span class="comment"># 创建者</span></span><br><span class="line">    worker: <span class="built_in">str</span> | <span class="literal">None</span> = <span class="literal">None</span>        <span class="comment"># 当前认领者</span></span><br><span class="line">    last_heartbeat_at: <span class="built_in">str</span> | <span class="literal">None</span> = <span class="literal">None</span>  <span class="comment"># 最后心跳时间</span></span><br><span class="line">    created_at: <span class="built_in">str</span>                   <span class="comment"># 创建时间</span></span><br><span class="line">    concluded_at: <span class="built_in">str</span> | <span class="literal">None</span> = <span class="literal">None</span>  <span class="comment"># 结论时间</span></span><br></pre></td></tr></table></figure>
+
+<p>intent有一个heartbeat来保证系统的正常运行，一个完整的生命周期是从一个有效的fact开始，创建，定时发送一个心跳，使用一个后台进程，超时未收到心跳就就释放 worker ，但是这个心跳包的发送不是在server层，而是在Dispatcher 实现的。<br> from 字段是一个列表，支持多个源 Fact，一条边可以同时从多个源节点出发</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">f002 ──┐</span><br><span class="line">       ├──(i003)──→ f006</span><br><span class="line">f004 ──┘</span><br></pre></td></tr></table></figure>
+
+<p>具体的实现还有一些问题，看一下源码确认<br> 三个表，fact和intent就是单存他们各自的元数据<br> intent_sources 表存储 Intent 和 Fact 的 关联关系 （哪个 Intent 从哪些 Fact 出发）</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE TABLE</span> IF <span class="keyword">NOT</span> <span class="keyword">EXISTS</span> intent_sources (</span><br><span class="line">    intent_id TEXT <span class="keyword">NOT NULL</span>,</span><br><span class="line">    project_id TEXT <span class="keyword">NOT NULL</span>,</span><br><span class="line">    fact_id TEXT <span class="keyword">NOT NULL</span>,           # 一个 Intent 对应多个 fact_id</span><br><span class="line">    <span class="keyword">PRIMARY KEY</span> (intent_id, project_id, fact_id),</span><br><span class="line">    <span class="keyword">FOREIGN KEY</span> (intent_id, project_id) <span class="keyword">REFERENCES</span> intents(id, project_id) <span class="keyword">ON</span> <span class="keyword">DELETE</span> CASCADE</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<p>一个 Intent 可以在 intent_sources 表中有多条记录，每条记录代表一个源 Fact，通过 intent_id 关联，实现”一个 Intent 从多个 Fact 出发，关于如何处理fact能联合，是Dispatcher层的通过 reason 任务来决定。</p>
+<p>app.py  作为FastAPI 应用入口，lifespan 管理应用生命周期，fastapi的路由在app.py注册，具体逻辑写在routers的同名py文件里面<br> Project是一个有明确起点和终点的问题实例，包含完整的图数据，model.py的具体代码<br> model.py定义了图的核心元素还有管理类定义</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">ProjectDetail</span>(<span class="title class_ inherited__">BaseModel</span>):</span><br><span class="line">    project: ProjectMeta    <span class="comment"># 项目元数据</span></span><br><span class="line">    facts: <span class="built_in">list</span>[Fact]       <span class="comment"># 图的节点集合</span></span><br><span class="line">    intents: <span class="built_in">list</span>[Intent]   <span class="comment"># 图的边集合</span></span><br><span class="line">    hints: <span class="built_in">list</span>[Hint]       <span class="comment"># 图外输入（不属于图结构）</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="project"><a href="#project" class="headerlink" title="project"></a>project</h3><p>project有三种状态</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">status: <span class="type">Literal</span>[<span class="string">&quot;active&quot;</span>, <span class="string">&quot;stopped&quot;</span>, <span class="string">&quot;completed&quot;</span>]</span><br></pre></td></tr></table></figure>
+
+<p>active和completed好理解，stopped是可恢复到active，代码中， stopped 会清空 两类 worker，<br> reason的和intent的，其他的整个图都完整保留，恢复的时候重新按正常流程调度，目的是避免脏状态 。如果不停止时清空，某个 worker 已经不在运行了，但 lease 还锁着它，其他的worker也不能进去</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># services.py:173-178</span></span><br><span class="line"><span class="keyword">if</span> body.status == <span class="string">&quot;stopped&quot;</span>:</span><br><span class="line">    <span class="comment"># 清空所有未结论的 Intent 的 worker</span></span><br><span class="line">    conn.execute(</span><br><span class="line">        <span class="string">&quot;UPDATE intents SET worker = NULL WHERE project_id = ? AND concluded_at IS NULL&quot;</span>,</span><br><span class="line">        (project_id,),</span><br><span class="line">    )</span><br><span class="line">    <span class="comment"># 清空项目的 reason lease</span></span><br><span class="line">    clear_project_reason(conn, project_id)</span><br></pre></td></tr></table></figure>
+
+<p>其他全部数据都保留，所有的fact和intents都在，新的 worker 可以 继续 处理这些未完成的 intents<br> 恢复的时候就直接改status</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">UpdateProjectStatusRequest</span>(<span class="title class_ inherited__">BaseModel</span>):</span><br><span class="line">    status: <span class="type">Literal</span>[<span class="string">&quot;active&quot;</span>, <span class="string">&quot;stopped&quot;</span>]</span><br><span class="line">    </span><br><span class="line"><span class="meta">    @router.post(<span class="params"><span class="string">&quot;/projects/&#123;project_id&#125;/intents/&#123;intent_id&#125;/heartbeat&quot;</span></span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">heartbeat</span>(<span class="params">project_id: <span class="built_in">str</span>, intent_id: <span class="built_in">str</span>, body: HeartbeatRequest</span>):</span><br><span class="line">    <span class="keyword">with</span> get_conn() <span class="keyword">as</span> conn:</span><br><span class="line">        <span class="comment"># 检查项目必须是 active 状态</span></span><br><span class="line">        check_project_active(conn, project_id)</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 检查 intent 是否可以被认领</span></span><br><span class="line">        get_claimable_open_intent_or_404(conn, project_id, intent_id, body.worker)</span><br><span class="line"></span><br><span class="line">        now = utcnow()</span><br><span class="line">        <span class="comment"># 重新设置 worker（认领）</span></span><br><span class="line">        conn.execute(</span><br><span class="line">            <span class="string">&quot;UPDATE intents SET worker = ?, last_heartbeat_at = ? WHERE id = ? AND project_id = ?&quot;</span>,</span><br><span class="line">            (body.worker, now, intent_id, project_id),</span><br><span class="line">        )</span><br></pre></td></tr></table></figure>
+
+<h3 id="Reason"><a href="#Reason" class="headerlink" title="Reason"></a>Reason</h3><p>架构中有两个心跳机制，一个是Intent 心跳，用来认领worker的控制，作用在单个探索任务，任务的结果就是输出新的fact，Reason心跳控制的范围是一个大任务的状态，任务的结果是提出新的intent或者是完成goal，理解为规划层。<br> Project.reason，单个project同一时刻只能有一个 reason，就是一张图，可以多个 Intent 并发执行<br> intent的explore是独立的任务，reason是决策不能并行</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># claim_project_reason  互斥锁</span></span><br><span class="line">current_worker = row[<span class="string">&quot;reason_worker&quot;</span>]</span><br><span class="line"><span class="keyword">if</span> current_worker <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span> <span class="keyword">and</span> current_worker != body.worker:</span><br><span class="line">    <span class="keyword">raise</span> HTTPException(<span class="number">409</span>, <span class="string">f&quot;Project reason is currently claimed by <span class="subst">&#123;current_worker&#125;</span>&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>Facts+ Intents+ Hints</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">ProjectReason</span>(<span class="title class_ inherited__">BaseModel</span>):</span><br><span class="line">    worker: <span class="built_in">str</span>              <span class="comment"># 当前执行 reason 的消费者</span></span><br><span class="line">    trigger: <span class="built_in">str</span>             <span class="comment"># 本次 reason 的触发原因</span></span><br><span class="line">    started_at: <span class="built_in">str</span>          <span class="comment"># 本次 reason 开始时间</span></span><br><span class="line">    last_heartbeat_at: <span class="built_in">str</span>   <span class="comment"># 最近一次 reason 心跳时间</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">ProjectMeta</span>(<span class="title class_ inherited__">BaseModel</span>):</span><br><span class="line">    <span class="built_in">id</span>: <span class="built_in">str</span></span><br><span class="line">    title: <span class="built_in">str</span></span><br><span class="line">    status: <span class="type">Literal</span>[<span class="string">&quot;active&quot;</span>, <span class="string">&quot;stopped&quot;</span>, <span class="string">&quot;completed&quot;</span>]</span><br><span class="line">    created_at: <span class="built_in">str</span></span><br><span class="line">    reason: ProjectReason | <span class="literal">None</span> = <span class="literal">None</span>  <span class="comment"># reason 字段</span></span><br></pre></td></tr></table></figure>
+
+<p>触发reason的条件，explore 完成，添加 fact，收到新 hint，最后一个 intent 完成(因为open intent被清空了)<br> 不把intent数量增加当作reason触发的条件，会导致无限循环，因为新增的intent是上一轮的产物</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">changes: <span class="built_in">list</span>[<span class="built_in">str</span>] = []</span><br><span class="line"></span><br><span class="line"><span class="comment"># 条件 1：Fact 数量增加（发现了新事实）</span></span><br><span class="line"><span class="keyword">if</span> <span class="built_in">len</span>(project.facts) &gt; checkpoint.fact_count:</span><br><span class="line">    changes.append(<span class="string">f&quot;facts:<span class="subst">&#123;checkpoint.fact_count&#125;</span>-&gt;<span class="subst">&#123;<span class="built_in">len</span>(project.facts)&#125;</span>&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 条件 2：Hint 数量增加（收到新提示）</span></span><br><span class="line"><span class="keyword">if</span> <span class="built_in">len</span>(project.hints) &gt; checkpoint.hint_count:</span><br><span class="line">    changes.append(<span class="string">f&quot;hints:<span class="subst">&#123;checkpoint.hint_count&#125;</span>-&gt;<span class="subst">&#123;<span class="built_in">len</span>(project.hints)&#125;</span>&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 条件 3：从&quot;有 open intents&quot;变为&quot;无 open intents&quot;（所有任务完成）</span></span><br><span class="line"><span class="keyword">if</span> checkpoint.open_intent_count &gt; <span class="number">0</span> <span class="keyword">and</span> open_intent_count == <span class="number">0</span>:</span><br><span class="line">    changes.append(<span class="string">f&quot;open_intents:<span class="subst">&#123;checkpoint.open_intent_count&#125;</span>-&gt;0&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> <span class="keyword">not</span> changes:</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">None</span>  <span class="comment"># 没有实质性变化，不触发 reason</span></span><br><span class="line"><span class="keyword">return</span> <span class="string">&quot;,&quot;</span>.join(changes)</span><br></pre></td></tr></table></figure>
+
+<p>ReasonCheckpoint机制，在models.py定义了</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@dataclass(<span class="params">slots=<span class="literal">True</span></span>)</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">ReasonCheckpoint</span>:</span><br><span class="line">    fact_count: <span class="built_in">int</span></span><br><span class="line">    hint_count: <span class="built_in">int</span></span><br><span class="line">    open_intent_count: <span class="built_in">int</span></span><br></pre></td></tr></table></figure>
+
+<p>存储在 DispatcherLoop 实例的内存中，字典的 key 是 project_id，Checkpoint就用来记录上面说的那几个触发reason的条件的变化，检测到值的变化符合条件就触发reason</p>
+<h3 id="hint"><a href="#hint" class="headerlink" title="hint"></a>hint</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Hint</span>(<span class="title class_ inherited__">BaseModel</span>):</span><br><span class="line">    <span class="built_in">id</span>: <span class="built_in">str</span>           <span class="comment"># 提示的唯一标识</span></span><br><span class="line">    content: <span class="built_in">str</span>      <span class="comment"># 提示内容</span></span><br><span class="line">    creator: <span class="built_in">str</span>      <span class="comment"># 创建者</span></span><br><span class="line">    created_at: <span class="built_in">str</span>   <span class="comment"># 创建时间</span></span><br></pre></td></tr></table></figure>
+
+<p>这个hint设置的是在全部状态都能被添加，他不属于图谱中，Hint 不是 Fact，不会产生 Intent，也不连接到图结构中，是可以人为外部添加的只给Reason worker来提供信息，通过下面的graph_yaml 变量传入到 reason prompt 中 ，AI 在分析时会读取 YAML 中的 hints 信息<br> 直接用前端从&#x2F;projects&#x2F;{project_id}&#x2F;hints路由写入hints</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">check_project_hint_writable</span>(<span class="params">conn: sqlite3.Connection, project_id: <span class="built_in">str</span></span>) -&gt; sqlite3.Row:</span><br><span class="line">    row = get_project_or_404(conn, project_id)</span><br><span class="line">    <span class="comment"># Hint 在 active、stopped、completed 状态下都允许写入</span></span><br><span class="line">    <span class="keyword">if</span> row[<span class="string">&quot;status&quot;</span>] <span class="keyword">not</span> <span class="keyword">in</span> (<span class="string">&quot;active&quot;</span>, <span class="string">&quot;stopped&quot;</span>, <span class="string">&quot;completed&quot;</span>):</span><br><span class="line">        <span class="keyword">raise</span> HTTPException(<span class="number">403</span>, <span class="string">f&quot;Project is <span class="subst">&#123;row[<span class="string">&#x27;status&#x27;</span>]&#125;</span>&quot;</span>)</span><br><span class="line">    <span class="keyword">return</span> row</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># reason 上下文准备prompt = render_prompt(</span></span><br><span class="line">    load_prompt(config.runtime.prompt_group, <span class="string">&quot;reason.md&quot;</span>),</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="string">&quot;graph_yaml&quot;</span>: export_yaml.strip(),      <span class="comment"># 包含 hints 的完整图数据</span></span><br><span class="line">        <span class="string">&quot;fact_ids&quot;</span>: format_fact_ids(allowed_fact_ids),  <span class="comment"># 可用 Fact ID 列表</span></span><br><span class="line">        <span class="string">&quot;open_intents&quot;</span>: format_open_intents(open_intents),  <span class="comment"># 未完成的 Intents</span></span><br><span class="line">        <span class="string">&quot;max_intents&quot;</span>: <span class="built_in">str</span>(config.tasks.reason.max_intents),  <span class="comment"># 最多创建几个新 intent</span></span><br><span class="line">    &#125;,</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p>这个是对模板的一个reason.md进行替换，把整个项目的图状态，比如可使用的fact和没完成的intent全部传过去，像一个快照，注入给reason的那个worker，触发和具体的实现都在Dispatcher层</p>
+<p>在project中的任务中的DAG图实际上就是一个yaml文件，直接给 LLM 看 YAML 格式的图结构，它天然能理解这种层次化表示，还能完整记录了 facts -&gt; intents -&gt; facts 的因果关系链<br> 大概是这样，理解成一个序列化快照 ，用于传给 LLM 作为上下文</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">project:</span></span><br><span class="line">  <span class="attr">title:</span> <span class="string">&quot;渗透测试项目&quot;</span></span><br><span class="line">  <span class="attr">origin:</span> <span class="string">&quot;目标网站 https://example.com&quot;</span></span><br><span class="line">  <span class="attr">goal:</span> <span class="string">&quot;获取 flag&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="attr">hints:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">content:</span> <span class="string">&quot;尝试 SQL 注入&quot;</span></span><br><span class="line">    <span class="attr">creator:</span> <span class="string">&quot;Human&quot;</span></span><br><span class="line">    <span class="attr">created_at:</span> <span class="string">&quot;2026-03-21 18:05:00&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="attr">facts:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">id:</span> <span class="string">&quot;origin&quot;</span></span><br><span class="line">    <span class="attr">description:</span> <span class="string">&quot;目标网站 https://example.com&quot;</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">id:</span> <span class="string">&quot;goal&quot;</span></span><br><span class="line">    <span class="attr">description:</span> <span class="string">&quot;获取 flag&quot;</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">id:</span> <span class="string">&quot;f001&quot;</span></span><br><span class="line">    <span class="attr">description:</span> <span class="string">&quot;网站使用 Nginx 1.18.0&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="attr">intents:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">from:</span> [<span class="string">&quot;origin&quot;</span>]</span><br><span class="line">    <span class="attr">to:</span> <span class="string">&quot;f001&quot;</span></span><br><span class="line">    <span class="attr">description:</span> <span class="string">&quot;识别 Web 服务器版本&quot;</span></span><br><span class="line">    <span class="attr">creator:</span> <span class="string">&quot;agent-A&quot;</span></span><br><span class="line">    <span class="attr">worker:</span> <span class="string">&quot;claudecode&quot;</span></span><br><span class="line">    <span class="attr">created_at:</span> <span class="string">&quot;2026-03-21 18:05:00&quot;</span></span><br><span class="line">    <span class="attr">concluded_at:</span> <span class="string">&quot;2026-03-21 18:06:00&quot;</span></span><br><span class="line"></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">from:</span> [<span class="string">&quot;f001&quot;</span>]</span><br><span class="line">    <span class="attr">to:</span> <span class="literal">null</span></span><br><span class="line">    <span class="attr">description:</span> <span class="string">&quot;尝试利用目录遍历&quot;</span></span><br><span class="line">    <span class="attr">creator:</span> <span class="string">&quot;agent-A&quot;</span></span><br><span class="line">    <span class="attr">worker:</span> <span class="literal">null</span></span><br><span class="line">    <span class="attr">created_at:</span> <span class="string">&quot;2026-03-21 18:09:00&quot;</span></span><br><span class="line">    <span class="attr">concluded_at:</span> <span class="literal">null</span></span><br></pre></td></tr></table></figure>
+
+<p>中途添加hint，分两种情况，第一种是创建项目的时候写的，直接就被替换进prompt传送进去<br> 已经在跑的那一次任务，不会自动热更新 prompt，就是只有bootstrap的时候是这样接收的<br> reason &#x2F; explore阶段就只能通过上面那个graph_yaml状态的改动来读取，dispatcher是会不断轮询的，dispatcher 下一次再 export_project(project_id) 时，就会触发reason</p>
+<h2 id="Dispatcher"><a href="#Dispatcher" class="headerlink" title="Dispatcher"></a>Dispatcher</h2><p>上面的server是服务端，这个Dispatcher就是客户端执行器<br> prompts放的是对应任务不同的生命周期的提示词，比如说bootstrap.md是引导任务提示词<br> 给每个Agent(worker)派发任务都在这一层，Dispatcher 是唯一的协议写入者和控制面；Agent 不 claim、不 heartbeat<br> 在Dispatcher有三种任务类型，Bootstrap，explore和Reason</p>
+<h3 id="Bootstrap-Intent-的定义"><a href="#Bootstrap-Intent-的定义" class="headerlink" title="Bootstrap Intent 的定义"></a>Bootstrap Intent 的定义</h3><p>\cairn\src\cairn\dispatcher\scheduler\loop.py<br> Bootstrap Intent 其实任务流程和生命周期都和普通的intent一样，只是语义解释不同，这个定义的意思是第一次探索，一个reason的初次任务：只有 origin 和 goal 两个事实</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">_is_initial_project</span>(<span class="params">self, project: ProjectDetail</span>) -&gt; <span class="built_in">bool</span>:</span><br><span class="line">    <span class="comment"># 只有 origin 和 goal 两个事实,且所有 intent 都是 bootstrap 类型</span></span><br><span class="line">    fact_ids = &#123;fact.<span class="built_in">id</span> <span class="keyword">for</span> fact <span class="keyword">in</span> project.facts&#125;</span><br><span class="line">    <span class="keyword">if</span> fact_ids != &#123;<span class="string">&quot;origin&quot;</span>, <span class="string">&quot;goal&quot;</span>&#125; <span class="keyword">or</span> <span class="built_in">len</span>(project.facts) != <span class="number">2</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> project.intents:</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">all</span>(<span class="variable language_">self</span>._is_bootstrap_intent(intent) <span class="keyword">for</span> intent <span class="keyword">in</span> project.intents)</span><br></pre></td></tr></table></figure>
+
+<h3 id="加载提示词–worker流程"><a href="#加载提示词–worker流程" class="headerlink" title="加载提示词–worker流程"></a>加载提示词–worker流程</h3><p> prompting.py, 加载提示词模板，然后用下面的claudecode.py构建好这个命令数组，作为cli参数发过去<br> 三种任务类型都用各自设计的提示词模板，替换数据传入</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">build_execute</span>(<span class="params">self, worker: WorkerConfig, prompt: <span class="built_in">str</span>, session: <span class="built_in">str</span> | <span class="literal">None</span></span>) -&gt; DriverResult:</span><br><span class="line">    <span class="keyword">assert</span> session <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span></span><br><span class="line">    <span class="keyword">return</span> DriverResult(</span><br><span class="line">        argv=[</span><br><span class="line">            <span class="string">&quot;claude&quot;</span>,                        <span class="comment"># Claude Code CLI</span></span><br><span class="line">            <span class="string">&quot;--session-id&quot;</span>, session,         <span class="comment"># 会话 ID,用于保持上下文</span></span><br><span class="line">            <span class="string">&quot;--dangerously-skip-permissions&quot;</span>, <span class="comment"># 跳过权限确认</span></span><br><span class="line">            <span class="string">&quot;-p&quot;</span>,                            <span class="comment"># 表示后面是 prompt</span></span><br><span class="line">            <span class="string">&quot;--&quot;</span>,                            <span class="comment"># 参数分隔符</span></span><br><span class="line">            prompt,                          <span class="comment"># ← 这里就是渲染后的完整提示词</span></span><br><span class="line">        ],</span><br><span class="line">        session=session,</span><br><span class="line">    )</span><br></pre></td></tr></table></figure>
+
+<p>在 Docker 容器中exec 注入执行，worker的执行层有execute阶段和conclude(收尾阶段)<br> 只在第一阶段出现异常（超时或输出解析失败）时才会进入。目的是利用同一个 session 让 Agent 总结当前已经完成的工作，而不是继续探索，这就是适配框架的鲁棒性设计<br> \dispatcher\runtime中的containers.py容器管理，以一个project为单位创建容器，调度循环loop.py中处理容器</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># containers.py#L181-L201</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">build_exec_process</span>(<span class="params"></span></span><br><span class="line"><span class="params">    self,</span></span><br><span class="line"><span class="params">    container_name: <span class="built_in">str</span>,</span></span><br><span class="line"><span class="params">    env: <span class="built_in">dict</span>[<span class="built_in">str</span>, <span class="built_in">str</span>],      <span class="comment"># 环境变量 (API Key 等)</span></span></span><br><span class="line"><span class="params">    command: <span class="built_in">list</span>[<span class="built_in">str</span>],       <span class="comment"># 如 [&quot;claude&quot;, &quot;-p&quot;, &quot;--&quot;, &quot;&lt;prompt&gt;&quot;]</span></span></span><br><span class="line"><span class="params">    timeout_seconds: <span class="built_in">int</span> | <span class="literal">None</span> = <span class="literal">None</span>,</span></span><br><span class="line"><span class="params">    kill_after_seconds: <span class="built_in">int</span> = <span class="number">5</span>,</span></span><br><span class="line"><span class="params"></span>) -&gt; ManagedProcess:</span><br><span class="line">    container = <span class="variable language_">self</span>._require_container(container_name)</span><br><span class="line">    </span><br><span class="line">    argv: <span class="built_in">list</span>[<span class="built_in">str</span>] = []</span><br><span class="line">    <span class="keyword">if</span> timeout_seconds <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">        <span class="comment"># 添加 Linux timeout 命令包装</span></span><br><span class="line">        <span class="comment"># 300秒超时，超时后等5秒发 SIGKILL</span></span><br><span class="line">        argv.extend([</span><br><span class="line">            <span class="string">&quot;timeout&quot;</span>,</span><br><span class="line">            <span class="string">&quot;-k&quot;</span>, <span class="string">f&quot;<span class="subst">&#123;kill_after_seconds&#125;</span>s&quot;</span>,  <span class="comment"># -k: 超时后强制kill</span></span><br><span class="line">            <span class="string">f&quot;<span class="subst">&#123;timeout_seconds&#125;</span>s&quot;</span>,           <span class="comment"># 超时时间</span></span><br><span class="line">        ])</span><br><span class="line">    </span><br><span class="line">    argv.extend(command)</span><br><span class="line">    <span class="comment"># 最终: [&quot;timeout&quot;, &quot;-k&quot;, &quot;5s&quot;, &quot;300s&quot;, &quot;claude&quot;, &quot;-p&quot;, &quot;--&quot;, &quot;...&quot;]</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> ManagedProcess(container, argv, env)</span><br></pre></td></tr></table></figure>
+
+<p>对容器的进程有两层保护的机制，liunx命令启动的时候加了一个超时参数，第二个是Python 的thread.join(timeout)，用docker sdk把进程给kill掉<br> Docker Exec可直接利用PID把worker运行的那个进程杀掉，不影响其他的</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> timeout_seconds <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">       argv.extend([</span><br><span class="line">           <span class="string">&quot;timeout&quot;</span>,          <span class="comment"># Linux 的 timeout 命令</span></span><br><span class="line">           <span class="string">&quot;-k&quot;</span>, <span class="string">f&quot;<span class="subst">&#123;kill_after_seconds&#125;</span>s&quot;</span>,  <span class="comment"># 强制杀死的等待时间</span></span><br><span class="line">           <span class="string">f&quot;<span class="subst">&#123;timeout_seconds&#125;</span>s&quot;</span>,           <span class="comment"># 超时时间</span></span><br></pre></td></tr></table></figure>
+
+<p>两个dockerfile对应两个容器，Cairn的server和Dispatcher，第二个是worker工作环境的容器，里面放了kali和一些安全工具，知识库和 PoC。codex和claude，每一个容器都直接用这个镜像<br> dockerfile设定了cc和codex的工作目录，mcp和skill，还有基本配置在容器启动时载入，工作目录就是解题空间，poc和知识库都在这个目录。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"># Dockerfile</span><br><span class="line">COPY ./.agents /home/kali/workspace/.agents</span><br><span class="line">COPY ./.agents /home/kali/workspace/.claude</span><br><span class="line">COPY ./AGENTS.md /home/kali/workspace/AGENTS.md</span><br><span class="line">COPY ./AGENTS.md /home/kali/workspace/CLAUDE.md</span><br><span class="line"></span><br><span class="line">WORKDIR /home/kali/workspace  ← 容器启动时的当前目录</span><br></pre></td></tr></table></figure>
+
+<h3 id="session维护机制"><a href="#session维护机制" class="headerlink" title="session维护机制"></a>session维护机制</h3><p>针对不同的worker，比如codex和claudecode，要设定对应的session管理方式<br> \dispatcher\workers的base.py，正常使用时，Claude Code 会自动创建和管理 session，但是直接用自定义的UUID 来 控制 session ID在这个情况更方便，因为 Cairn 需要在不同的时间点精确地恢复 同一个会话<br> codex会在 stderr 输出 session ID，直接用一个函数提取出来就行了<br> Driver类声明了自己的type_name，worker在config的时候要写WorkerType，执行任务的时候就直接获取Driver。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">run_bootstrap_task</span>(<span class="params">..., intent, ...</span>):</span><br><span class="line">   创建 session（内存中的 UUID）</span><br><span class="line">    session = driver.prepare_session()</span><br><span class="line">        <span class="comment"># execute 阶段使用 session</span></span><br><span class="line">    execute = driver.build_execute(worker, prompt, session)</span><br><span class="line">    first = run_worker_process(..., execute.argv, ...)</span><br><span class="line">        <span class="comment"># 提取 session</span></span><br><span class="line">    session = driver.extract_session(session, first.stderr)</span><br><span class="line">        <span class="comment"># 如果 execute 失败，使用同一个 session 恢复对话</span></span><br><span class="line">    <span class="comment"># fallback 到 conclude</span></span><br><span class="line">    <span class="keyword">return</span> _try_conclude_fallback(</span><br><span class="line">        ...,</span><br><span class="line">        intent,</span><br><span class="line">        session,  <span class="comment"># ← 传递同一个 session</span></span><br><span class="line">        ...</span><br><span class="line">    )</span><br><span class="line">        <span class="comment"># 如果 execute 成功，直接返回结果</span></span><br><span class="line">    <span class="comment"># session 被丢弃，不再需要</span></span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;success&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>session 是以 intent 为单位进行管理的，同一个 Intent 任务内 ，execute 和 conclude 两个阶段之间 传递对话上下文的媒介</p>
+<p>健康检查机制,Dispatcher启动时检查全部的worker，每个 Intent 任务执行前只检查 当前任务要使用的 worker，具体的检查内容是Base URL ，API Key 和指定的模型可用性。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">run_startup_healthchecks</span>(<span class="params">config, container_manager, *, show_commands=<span class="literal">False</span></span>):</span><br><span class="line">    <span class="comment"># 创建临时容器</span></span><br><span class="line">    container_name = container_manager.create_startup_container()</span><br><span class="line">        <span class="comment"># 并行检查所有 worker</span></span><br><span class="line">    <span class="keyword">with</span> ThreadPoolExecutor(max_workers=parallelism) <span class="keyword">as</span> executor:</span><br><span class="line">        future_map = &#123;</span><br><span class="line">            executor.submit(</span><br><span class="line">                _run_worker_healthcheck,</span><br><span class="line">                container_manager, container_name, worker,</span><br><span class="line">                config.runtime.healthcheck_timeout,</span><br><span class="line">            ): worker.name</span><br><span class="line">            <span class="keyword">for</span> worker <span class="keyword">in</span> workers</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment"># 最后清理临时容器</span></span><br><span class="line">    container_manager.remove_container(container_name, force=<span class="literal">True</span>)</span><br></pre></td></tr></table></figure>
+
+<h3 id="Worker-执行结果输出与记录"><a href="#Worker-执行结果输出与记录" class="headerlink" title="Worker 执行结果输出与记录"></a>Worker 执行结果输出与记录</h3><p>worker的执行是在容器中，上面的<a href="#%E5%8A%A0%E8%BD%BD%E6%8F%90%E7%A4%BA%E8%AF%8D--worker%E6%B5%81%E7%A8%8B">加载提示词–worker流程</a>输入<br> 输出读取的原理，使用一个流程处理类，利用好Docker Python SDK 的原生 API，这几个Agent CLI 工具返回的是，Docker SDK 只负责传输原始字节流<br> CLI工具限制llm返回的格式只有通过bootstrap.md等几个prompt限制，明确要求返回json<br> 各个Driver在执行前构建 execute 命令和初始化 session ID并且注入环境变量，在任务执行后的输出阶段，也要提取session ID，判断是否支持 conclude fallback</p>
+<p>然后就到ManagedProcess 缓冲并拼接</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">ManagedProcess</span>:  <span class="comment"># ← 自定义类</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, container: Container, command: <span class="built_in">list</span>[<span class="built_in">str</span>], env: <span class="built_in">dict</span>[<span class="built_in">str</span>, <span class="built_in">str</span>]</span>):</span><br><span class="line">        <span class="variable language_">self</span>.command = command                              <span class="comment"># 自定义</span></span><br><span class="line">        <span class="variable language_">self</span>.env = env                                      <span class="comment"># 自定义</span></span><br><span class="line">        <span class="variable language_">self</span>._container = container                         <span class="comment"># Docker SDK 原生对象</span></span><br><span class="line">        <span class="variable language_">self</span>._api = container.client.api                   <span class="comment"># Docker SDK 原生 API 客户端</span></span><br><span class="line">        </span><br><span class="line">        <span class="variable language_">self</span>._exec_id: <span class="built_in">str</span> | <span class="literal">None</span> = <span class="literal">None</span>                    <span class="comment"># Docker 返回的 exec ID</span></span><br><span class="line">        <span class="variable language_">self</span>._reader: threading.Thread | <span class="literal">None</span> = <span class="literal">None</span>        <span class="comment"># 自定义线程</span></span><br><span class="line">        <span class="variable language_">self</span>._stdout: <span class="built_in">list</span>[<span class="built_in">str</span>] = []                        <span class="comment"># 自定义缓冲</span></span><br><span class="line">        <span class="variable language_">self</span>._stderr: <span class="built_in">list</span>[<span class="built_in">str</span>] = []                        <span class="comment"># 自定义缓冲</span></span><br><span class="line">        <span class="variable language_">self</span>._returncode: <span class="built_in">int</span> | <span class="literal">None</span> = <span class="literal">None</span>                 <span class="comment"># Docker 返回的退出码</span></span><br><span class="line">        <span class="variable language_">self</span>._timed_out = <span class="literal">False</span>                             <span class="comment"># 自定义标志</span></span><br><span class="line">        <span class="variable language_">self</span>._cancel_reason: <span class="built_in">str</span> | <span class="literal">None</span> = <span class="literal">None</span>              <span class="comment"># 自定义</span></span><br><span class="line">        <span class="variable language_">self</span>._read_error: <span class="built_in">str</span> | <span class="literal">None</span> = <span class="literal">None</span>                 <span class="comment"># 自定义</span></span><br><span class="line">        <span class="variable language_">self</span>._done = threading.Event()                      <span class="comment"># 自定义同步原语</span></span><br></pre></td></tr></table></figure>
+
+<p>输出解析层是用JSON提取<br> 容器内的Agent 进程 (claude&#x2F;codex)，LLM 可能不完全遵循 只返回 JSON的指令，用一个提取json的脚本，后面就到了通用包装器解包，contracts.py，在目前这个提取输出信息的方法中，bootstrap.py</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span>:</span><br><span class="line">    payload = parse_json_output(first.stdout)</span><br><span class="line">    kind, data = validate_bootstrap_execute_payload(payload)</span><br><span class="line"><span class="keyword">except</span> Exception <span class="keyword">as</span> exc:</span><br><span class="line">    <span class="comment"># 解析失败时</span></span><br><span class="line">    LOG.warning(</span><br><span class="line">        <span class="string">&quot;bootstrap parse failed project=%s intent=%s worker=%s error=%s ... stdout_preview=%s stderr_preview=%s&quot;</span>,</span><br><span class="line">        project.project.<span class="built_in">id</span>,</span><br><span class="line">        intent.<span class="built_in">id</span>,</span><br><span class="line">        worker.name,</span><br><span class="line">        exc,</span><br><span class="line">        preview(first.stdout),      <span class="comment"># 只记录日志（截取 1200 字符）</span></span><br><span class="line">        preview(first.stderr),</span><br><span class="line">    )</span><br><span class="line">    <span class="comment"># 触发 conclude fallback，尝试让 Agent 重新输出</span></span><br><span class="line">    <span class="keyword">return</span> _try_conclude_fallback(...)  <span class="comment"># 不保留非 JSON 信息</span></span><br></pre></td></tr></table></figure>
+
+<p>如果JSON 提取失败时，触发conclude，在explore和bootstrap任务中都有分别的实现<br> Timeout超时触发和JSON 解析或验证失败触发，在这个阶段，就是恢复execute阶段执行失败的session，在conclude阶段注入的是bootstrap_conclude.md，大概意思就是强制 LLM 立即停止工作，只输出已确认的事实摘要，写入结果<br> 虽然非 JSON 内容没有被系统提取，但 Agent 通过 session 机制保存着上下文，还可以用session恢复。</p>
+<h4 id="Mock-Driver"><a href="#Mock-Driver" class="headerlink" title="Mock Driver"></a>Mock Driver</h4><p>mockdriver 用于本地观察 dispatcher 的成功、失败和超时路径，这个driver的Prompt 是结构化 JSON，不调用真正的 AI API，可以直接用Mock Driver来测试模拟实际的调用情况<br> 模拟的就是 stdout&#x2F;stderr ，返回的 JSON 是否符合协议，真正被替换掉的，只有 worker 这一层</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">server -&gt; dispatcher -&gt; executor(local/container) -&gt; healthcheck-&gt;timeout-&gt; 协议写回 </span><br></pre></td></tr></table></figure>
+
+<p>这些都还是真跑的,mock启动一个子进程，把mock 行为配置 和 当前任务的 prompt JSON传进去</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="string">&quot;phase&quot;</span>: <span class="string">&quot;reason&quot;</span>,</span><br><span class="line">  <span class="string">&quot;fact_ids&quot;</span>: &#123;fact_ids&#125;,</span><br><span class="line">  <span class="string">&quot;open_intents&quot;</span>: &#123;open_intents&#125;,</span><br><span class="line">  <span class="string">&quot;max_intents&quot;</span>: &#123;max_intents&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>设置dispatch_mock.yaml，在worker的env配置Mock 行为，比如</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">MOCK_HEALTHCHECK:</span> <span class="string">&#x27;&#123;&quot;delay&quot;:[0,2],&quot;outcomes&quot;:&#123;&quot;ok&quot;:0.9,&quot;fail&quot;:0.1&#125;&#125;&#x27;</span></span><br><span class="line">   <span class="attr">MOCK_BOOTSTRAP:</span> <span class="string">&#x27;&#123;&quot;delay&quot;:[5,10],&quot;outcomes&quot;:&#123;&quot;complete&quot;:0.0,&quot;fact&quot;:0.6,&quot;rejected&quot;:0.1,&quot;invalid_json&quot;:0.1,&quot;invalid_payload&quot;:0.1,&quot;command_fail&quot;:0.1&#125;&#125;&#x27;</span></span><br><span class="line">   <span class="attr">MOCK_REASON:</span> <span class="string">&#x27;&#123;&quot;delay&quot;:[2,6],&quot;outcomes&quot;:&#123;&quot;complete&quot;:0.1,&quot;intent&quot;:0.4,&quot;noop&quot;:0.1,&quot;rejected&quot;:0.1,&quot;invalid_json&quot;:0.1,&quot;invalid_payload&quot;:0.1,&quot;command_fail&quot;:0.1&#125;&#125;&#x27;</span></span><br><span class="line">   <span class="attr">MOCK_EXPLORE_EXECUTE:</span> <span class="string">&#x27;&#123;&quot;delay&quot;:[5,10],&quot;outcomes&quot;:&#123;&quot;fact&quot;:0.6,&quot;rejected&quot;:0.1,&quot;invalid_json&quot;:0.1,&quot;invalid_payload&quot;:0.1,&quot;command_fail&quot;:0.1&#125;&#125;&#x27;</span></span><br><span class="line">   <span class="attr">MOCK_EXPLORE_CONCLUDE:</span> <span class="string">&#x27;&#123;&quot;delay&quot;:[2,6],&quot;outcomes&quot;:&#123;&quot;fact&quot;:0.6,&quot;rejected&quot;:0.1,&quot;invalid_json&quot;:0.1,&quot;invalid_payload&quot;:0.1,&quot;command_fail&quot;:0.1&#125;&#125;&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="主调度循环的非阻塞"><a href="#主调度循环的非阻塞" class="headerlink" title="主调度循环的非阻塞"></a>主调度循环的非阻塞</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># loop.py 第 71-100 行</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">run</span>(<span class="params">self, once: <span class="built_in">bool</span> = <span class="literal">False</span></span>) -&gt; <span class="literal">None</span>:</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        <span class="variable language_">self</span>.run_startup_healthchecks()</span><br><span class="line">        <span class="keyword">while</span> <span class="literal">True</span>:  <span class="comment"># 主调度循环</span></span><br><span class="line">            <span class="keyword">try</span>:</span><br><span class="line">                <span class="keyword">if</span> <span class="keyword">not</span> <span class="variable language_">self</span>._settings_checked:</span><br><span class="line">                    <span class="variable language_">self</span>._validate_server_settings()</span><br><span class="line">                    <span class="variable language_">self</span>._settings_checked = <span class="literal">True</span></span><br><span class="line">                </span><br><span class="line">                <span class="variable language_">self</span>._reap_futures()              <span class="comment"># 1. 收集已完成的任务</span></span><br><span class="line">                <span class="variable language_">self</span>._reap_cleanup_futures()      <span class="comment"># 2. 收集已完成的清理任务</span></span><br><span class="line">                summaries = <span class="variable language_">self</span>.client.list_projects()</span><br><span class="line">                <span class="variable language_">self</span>._initialize_reason_checkpoints(summaries)</span><br><span class="line">                <span class="variable language_">self</span>._refresh_runtime_projects(summaries)</span><br><span class="line">                <span class="variable language_">self</span>._cancel_inactive_tasks(summaries)</span><br><span class="line">                <span class="variable language_">self</span>._queue_container_cleanups(summaries)  <span class="comment"># 3. 队列化容器清理</span></span><br><span class="line">                <span class="variable language_">self</span>._dispatch_available(summaries)        <span class="comment"># 4. 调度新任务</span></span><br><span class="line">            <span class="keyword">except</span> requests.RequestException <span class="keyword">as</span> exc:</span><br><span class="line">                <span class="keyword">if</span> once:</span><br><span class="line">                    <span class="keyword">raise</span></span><br><span class="line">                LOG.warning(<span class="string">&quot;dispatcher server request failed ...&quot;</span>)</span><br><span class="line">                time.sleep(<span class="variable language_">self</span>.config.runtime.interval)</span><br><span class="line">                <span class="keyword">continue</span></span><br><span class="line">            </span><br><span class="line">            <span class="keyword">if</span> once:</span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line">            time.sleep(<span class="variable language_">self</span>.config.runtime.interval)  <span class="comment"># 每隔 interval 秒循环一次</span></span><br><span class="line">    <span class="keyword">finally</span>:</span><br><span class="line">        ...</span><br></pre></td></tr></table></figure>
+
+<p>主循环每 interval 秒执行一次，必须快速完成，不能被任何操作阻塞<br> 分层主任务线程(执行 bootstrap、explore、reason 任务)和清理线程池(专门处理容器清理，独立于主任务)</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 主循环中的清理操作</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">_queue_container_cleanups</span>(<span class="params">self, summaries: <span class="built_in">list</span>[ProjectSummary]</span>) -&gt; <span class="literal">None</span>:</span><br><span class="line">    <span class="comment"># 只是提交任务到线程池，立即返回</span></span><br><span class="line">    future = <span class="variable language_">self</span>.cleanup_executor.submit(</span><br><span class="line">        <span class="variable language_">self</span>.container_manager.cleanup_completed, </span><br><span class="line">        summary.<span class="built_in">id</span></span><br><span class="line">    )</span><br><span class="line">    <span class="comment"># 不等待 future 完成，继续执行后续代码</span></span><br></pre></td></tr></table></figure>
+
+<p>Dispatcher通过dispatch.yaml来进行主要功能的配置，在运行时通过config加载<br> max_running 是全局并发限制，限制跨项目这个worker能接收几个任务</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">runtime:</span></span><br><span class="line">  <span class="attr">interval:</span> <span class="number">3</span>              <span class="comment"># 主循环间隔 + heartbeat 周期（秒）</span></span><br><span class="line">  <span class="attr">max_workers:</span> <span class="number">8</span>           <span class="comment"># 全局最大并发任务数</span></span><br><span class="line">  <span class="attr">max_running_projects:</span> <span class="number">3</span>  <span class="comment"># 最大同时运行的项目数</span></span><br><span class="line">  <span class="attr">max_project_workers:</span> <span class="number">4</span>   <span class="comment"># 单个项目内最大并发任务数</span></span><br><span class="line">  <span class="attr">healthcheck_timeout:</span> <span class="number">20</span>  <span class="comment"># 健康检查超时（秒）</span></span><br><span class="line">  <span class="attr">prompt_group:</span> <span class="string">&quot;default&quot;</span>  <span class="comment"># 使用的 prompt 模板组</span></span><br></pre></td></tr></table></figure>
+
+<p>注册的时候通过 type 字段识别协议，然后合并环境变量到容器里面的worker<br> 假如要注册新的worker，先写一个新的driver  &#x2F;dispatcher&#x2F;workers&#x2F;adapters&#x2F;newdriver.py<br> 在 <strong>init</strong>.py 中导出新驱动，在注册表中注册驱动<br> 统一接口至少应覆盖这些能力：</p>
+<ul>
+<li><code>build_healthcheck(worker)</code>：构造健康检查命令</li>
+<li><code>prepare_session()</code>：需要时预先生成 session id</li>
+<li><code>build_execute(worker, prompt, session)</code>：构造第一阶段执行命令</li>
+<li><code>extract_session(session, stderr)</code>：需要时从 <code>stderr</code> 提取 session id，或继续使用预生成 session</li>
+<li><code>build_conclude(worker, prompt, session)</code>：在双阶段 <code>explore</code> 中恢复同一 session 做收尾</li>
+<li><code>supports_conclude()</code>：声明该 driver 是否支持双阶段 <code>explore</code></li>
+</ul>
+<p>项目的本意是在无人工介入情况下进行渗透和CTF的解题，但是这是一个完备的系统，可以拆解出可复用的板块，claudecode和codex以容器的形式运行，skill和payload的文档直接注入容器中，没有配任何的外部工具比如rag。不是传统的多agent架构，但是以一个共享的DAG图环境来实现了新的协同方式</p>
+<h1 id="重构"><a href="#重构" class="headerlink" title="重构"></a>重构</h1><p>重构一个执行模式，可调整为容器执行和本地worker执行,大概的方法是， 配置层决定走哪种模式<br> 调度器、任务层、健康检查层都不再直接依赖 Docker，而是只依赖 ExecutorProtocol<br> 切换模式时，真正变的是配置和工厂返回的执行器实现，上层流程不用改.<br> 把执行后端加上俩种模式的判断</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">create_executor</span>(<span class="params">config: DispatchConfig</span>) -&gt; ExecutorProtocol:</span><br><span class="line">    <span class="keyword">if</span> config.execution_mode == <span class="string">&quot;container&quot;</span>:</span><br><span class="line">        <span class="keyword">return</span> ContainerManager(config.container)</span><br><span class="line">    <span class="keyword">if</span> config.execution_mode == <span class="string">&quot;local&quot;</span>:</span><br><span class="line">        <span class="keyword">return</span> LocalExecutor(config.workspace_root)</span><br></pre></td></tr></table></figure>
+
+<p>准备两种模式yaml的配置<br> 先启动server</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">uv run cairn serve --host 127.0.0.1 --port 8080</span><br><span class="line"></span><br><span class="line">先跑一次 dispatcher startup healthcheck</span><br><span class="line"></span><br><span class="line">uv run  cairn dispatch --config dispatch.yaml --startup-healthcheck-only</span><br><span class="line">uv run  cairn dispatch --config dispatch-local.yaml --startup-healthcheck-only</span><br><span class="line"></span><br><span class="line">启动dispatcher，然后就可以创建 project，这两个顺序随便</span><br><span class="line">uv run  cairn dispatch --config dispatch.yaml</span><br><span class="line">uv run  cairn dispatch --config dispatch-local.yaml</span><br><span class="line"></span><br><span class="line">sudo chown -R $USER:$USER .</span><br></pre></td></tr></table></figure>
+
+<p>对于容器模式的dispatch-local.yaml ，改一下execution_mode: “container”</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">cap_add: []是Docker 容器的Linux capability追加权限，</span><br><span class="line">如果 worker 里面要做一些更底层的系统/网络操作，就额外开权限</span><br><span class="line"></span><br><span class="line">设置轮询周期</span><br><span class="line">runtime:</span><br><span class="line">  interval: 3</span><br></pre></td></tr></table></figure>
+
+<p>服务端的UI可以设置timeout。<br> 安装worker</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">npm config set registry https://registry.npmmirror.com</span><br><span class="line"> npm install -g @openai/codex</span><br><span class="line"> npm install -g @anthropic-ai/claude-code</span><br></pre></td></tr></table></figure>
+
+<p>当前实现按“单 Dispatcher 实例”设计和测试；不支持多个 Dispatcher 同时连接同一服务端共同调度</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">关键调度状态都在 Dispatcher 进程内存里：runtime_project_ids、reason_checkpoints、worker_unhealthy_until、worker_rejected_until、project_cursor、_cleanup_pending</span><br></pre></td></tr></table></figure>
+
+<p>这些状态不共享，所以两个 Dispatcher 会各自基于自己的旧快照做决策，容易重复选同一个 project、重复触发 reason&#x2F;explore、重复做 cleanup<br> 最明显的风险点是 bootstrap：两个 Dispatcher 可能同时看到“initial project”，然后都去 create_intent()；没有项目级全局锁</p>
+<h2 id="日志更新"><a href="#日志更新" class="headerlink" title="日志更新"></a>日志更新</h2><p>保留现有 <code>Timeline</code>(原来的log，改成这个合理点)，添加一个execution record<br> 复用dispatcher已经有的执行结果ProcessResult，HealthcheckRun，可以看到完整的stdout和stderr</p>
+</article>
+
+
+<div class="related-wrap" id="read-next"><section class="body"><div class="item" id="prev"></div><div class="item" id="next"><div class="note">较早文章</div><a href="/2026/05/03/AGENT-s-Note/">AGENT's Note</a></div></section></div>
+
+
+
+
+
+
+<footer class="page-footer footnote"><hr><div class="text"></div></footer>
+<div class="main-mask" onclick="sidebar.dismiss()"></div></div><aside class="l_right">
+<div class="widgets">
+
+
+
+<widget class="widget-wrapper toc" id="data-toc" collapse="false"><div class="widget-header dis-select"><span class="name">本文目录</span><a class="cap-action" onclick="sidebar.toggleTOC()" ><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></a></div><div class="widget-body"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%A1%B9%E7%9B%AE%E6%9E%B6%E6%9E%84"><span class="toc-text">项目架构</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#claudecode%E7%9A%84%E5%A4%9A%E6%99%BA%E8%83%BD%E4%BD%93%E6%9E%B6%E6%9E%84"><span class="toc-text">claudecode的多智能体架构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Cairn-Server"><span class="toc-text">Cairn Server</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Fact"><span class="toc-text">Fact</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#intent"><span class="toc-text">intent</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#project"><span class="toc-text">project</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Reason"><span class="toc-text">Reason</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#hint"><span class="toc-text">hint</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Dispatcher"><span class="toc-text">Dispatcher</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Bootstrap-Intent-%E7%9A%84%E5%AE%9A%E4%B9%89"><span class="toc-text">Bootstrap Intent 的定义</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8A%A0%E8%BD%BD%E6%8F%90%E7%A4%BA%E8%AF%8D%E2%80%93worker%E6%B5%81%E7%A8%8B"><span class="toc-text">加载提示词–worker流程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#session%E7%BB%B4%E6%8A%A4%E6%9C%BA%E5%88%B6"><span class="toc-text">session维护机制</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Worker-%E6%89%A7%E8%A1%8C%E7%BB%93%E6%9E%9C%E8%BE%93%E5%87%BA%E4%B8%8E%E8%AE%B0%E5%BD%95"><span class="toc-text">Worker 执行结果输出与记录</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Mock-Driver"><span class="toc-text">Mock Driver</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%BB%E8%B0%83%E5%BA%A6%E5%BE%AA%E7%8E%AF%E7%9A%84%E9%9D%9E%E9%98%BB%E5%A1%9E"><span class="toc-text">主调度循环的非阻塞</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%87%8D%E6%9E%84"><span class="toc-text">重构</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%97%A5%E5%BF%97%E6%9B%B4%E6%96%B0"><span class="toc-text">日志更新</span></a></li></ol></li></ol></div><div class="widget-footer"><a class="top" onclick="util.scrollTop()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5"><path stroke-linejoin="round" d="m9 15.5l3-3l3 3m-6-4l3-3l3 3"/><path d="M7 3.338A9.95 9.95 0 0 1 12 2c5.523 0 10 4.477 10 10s-4.477 10-10 10S2 17.523 2 12c0-1.821.487-3.53 1.338-5"/></g></svg><span>回到顶部</span></a></div></widget>
+</div></aside><div class='float-panel'>
+  <button type='button' style='display:none' class='laptop-only rightbar-toggle mobile' onclick='sidebar.rightbar()'>
+    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg>
+  </button>
+  <button type='button' style='display:none' class='mobile-only leftbar-toggle mobile' onclick='sidebar.leftbar()'>
+    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 11c0-3.771 0-5.657 1.172-6.828C4.343 3 6.229 3 10 3h4c3.771 0 5.657 0 6.828 1.172C22 5.343 22 7.229 22 11v2c0 3.771 0 5.657-1.172 6.828C19.657 21 17.771 21 14 21h-4c-3.771 0-5.657 0-6.828-1.172C2 18.657 2 16.771 2 13z"/><path id="sep" stroke-linecap="round" d="M5.5 10h6m-5 4h4m4.5 7V3"/></g></svg>
+  </button>
+</div>
+</div><div class="scripts">
+
+
+<script type="text/javascript">
+  window.canonical = {"originalHost":null,"officialHosts":["localhost"],"encoded":""};
+  const ctx = {
+    date_suffix: {
+      just: `刚刚`,
+      min: `分钟前`,
+      hour: `小时前`,
+      day: `天前`,
+    },
+    root : `/`,
+    tag_plugins: {
+      chat: Object.assign({"api":"https://siteinfo.listentothewind.cn/api/v1"}),
+    }
+  };
+
+  // required plugins (only load if needs)
+  if (`local_search`) {
+    ctx.search = {};
+    ctx.search.service = `local_search`;
+    if (ctx.search.service == 'local_search') {
+      let service_obj = Object.assign({}, `{"field":"all","path":"/search.json","content":true,"skip_search":null,"sort":"-date"}`);
+      ctx.search[ctx.search.service] = service_obj;
+    }
+  }
+  const def = {
+    avatar: `https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/avatar/round/3442075.svg`,
+    cover: `https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/cover/76b86c0226ffd.svg`,
+    loading: `https://api.iconify.design/eos-icons:three-dots-loading.svg?color=%231cd0fd`,
+  };
+  const deps = {
+    jquery: `https://gcore.jsdelivr.net/npm/jquery@3.7/dist/jquery.min.js`,
+    marked: `https://gcore.jsdelivr.net/npm/marked@13.0/lib/marked.umd.min.js`,
+    lazyload: `/%5Bobject%20Object%5D`
+  }
+  
+
+</script>
+
+<script type="text/javascript">
+  
+  function RunItem() {
+    this.list = []; // 存放回调函数
+    this.start = () => {
+      for (var i = 0; i < this.list.length; i++) {
+        this.list[i].run();
+      }
+    };
+    this.push = (fn, name, setRequestAnimationFrame = true) => {
+      let myfn = fn
+      if (setRequestAnimationFrame) {
+        myfn = () => {
+          utils.requestAnimationFrame(fn)
+        }
+      }
+      var f = new Item(myfn, name);
+      this.list.push(f);
+    };
+    this.remove = (name) => {
+      for (let index = 0; index < this.list.length; index++) {
+        const e = this.list[index];
+        if (e.name == name) {
+          this.list.splice(index, 1);
+        }
+      }
+    }
+    // 构造一个可以run的对象
+    function Item(fn, name) {
+      // 函数名称
+      this.name = name || fn.name;
+      // run方法
+      this.run = () => {
+        try {
+          fn()
+        } catch (error) {
+          console.log(error);
+        }
+      };
+    }
+  }
+
+  const utils = {
+    // 懒加载 css https://github.com/filamentgroup/loadCSS
+    css: (href, before, media, attributes) => {
+      var doc = window.document;
+      var ss = doc.createElement("link");
+      var ref;
+      if (before) {
+        ref = before;
+      } else {
+        var refs = (doc.body || doc.getElementsByTagName("head")[0]).childNodes;
+        ref = refs[refs.length - 1];
+      }
+      var sheets = doc.styleSheets;
+      if (attributes) {
+        for (var attributeName in attributes) {
+          if (attributes.hasOwnProperty(attributeName)) {
+            ss.setAttribute(attributeName, attributes[attributeName]);
+          }
+        }
+      }
+      ss.rel = "stylesheet";
+      ss.href = href;
+      ss.media = "only x";
+      function ready(cb) {
+        if (doc.body) {
+          return cb();
+        }
+        setTimeout(function () {
+          ready(cb);
+        });
+      }
+      ready(function () {
+        ref.parentNode.insertBefore(ss, before ? ref : ref.nextSibling);
+      });
+      var onloadcssdefined = function (cb) {
+        var resolvedHref = ss.href;
+        var i = sheets.length;
+        while (i--) {
+          if (sheets[i].href === resolvedHref) {
+            return cb();
+          }
+        }
+        setTimeout(function () {
+          onloadcssdefined(cb);
+        });
+      };
+      function loadCB() {
+        if (ss.addEventListener) {
+          ss.removeEventListener("load", loadCB);
+        }
+        ss.media = media || "all";
+      }
+      if (ss.addEventListener) {
+        ss.addEventListener("load", loadCB);
+      }
+      ss.onloadcssdefined = onloadcssdefined;
+      onloadcssdefined(loadCB);
+      return ss;
+    },
+
+    js: (src, opt) => new Promise((resolve, reject) => {
+      var script = document.createElement('script');
+      if (src.startsWith('/')) {
+        src = ctx.root + src.substring(1);
+      }
+      script.src = src;
+      if (opt) {
+        for (let key of Object.keys(opt)) {
+          script[key] = opt[key]
+        }
+      } else {
+        // 默认异步，如果需要同步，第二个参数传入 {} 即可
+        script.async = true
+      }
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function () {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    }),
+
+    jq: (fn) => {
+      if (typeof jQuery === 'undefined') {
+        utils.js(deps.jquery).then(fn)
+      } else {
+        fn()
+      }
+    },
+
+    onLoading: (el) => {
+      if (el) {
+        $(el).append('<div class="loading-wrap"><svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2"><path stroke-dasharray="60" stroke-dashoffset="60" stroke-opacity=".3" d="M12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3Z"><animate fill="freeze" attributeName="stroke-dashoffset" dur="1.3s" values="60;0"/></path><path stroke-dasharray="15" stroke-dashoffset="15" d="M12 3C16.9706 3 21 7.02944 21 12"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.3s" values="15;0"/><animateTransform attributeName="transform" dur="1.5s" repeatCount="indefinite" type="rotate" values="0 12 12;360 12 12"/></path></g></svg></div>');
+      }
+    },
+    onLoadSuccess: (el) => {
+      if (el) {
+        $(el).find('.loading-wrap').remove();
+      }
+    },
+    onLoadFailure: (el) => {
+      if (el) {
+        $(el).find('.loading-wrap svg').remove();
+        $(el).find('.loading-wrap').append('<svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path stroke-dasharray="60" stroke-dashoffset="60" d="M12 3L21 20H3L12 3Z"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.5s" values="60;0"/></path><path stroke-dasharray="6" stroke-dashoffset="6" d="M12 10V14"><animate fill="freeze" attributeName="stroke-dashoffset" begin="0.6s" dur="0.2s" values="6;0"/></path></g><circle cx="12" cy="17" r="1" fill="currentColor" fill-opacity="0"><animate fill="freeze" attributeName="fill-opacity" begin="0.8s" dur="0.4s" values="0;1"/></circle></svg>');
+        $(el).find('.loading-wrap').addClass('error');
+      }
+    },
+    request: (el, url, callback, onFailure) => {
+      const maxRetry = 3;
+      let retryCount = 0;
+
+      return new Promise((resolve, reject) => {
+        const load = () => {
+          utils.onLoading?.(el);
+
+          let timedOut = false;
+          const timeout = setTimeout(() => {
+            timedOut = true;
+            console.warn('[request] 超时:', url);
+
+            if (++retryCount >= maxRetry) {
+              utils.onLoadFailure?.(el);
+              onFailure?.();
+              reject('请求超时');
+            } else {
+              setTimeout(load, 1000);
+            }
+          }, 5000);
+
+          fetch(url).then(resp => {
+            if (timedOut) return;
+            clearTimeout(timeout);
+
+            if (!resp.ok) throw new Error('响应失败');
+            return resp;
+          }).then(data => {
+            if (timedOut) return;
+            utils.onLoadSuccess?.(el);
+            callback(data);
+            resolve(data);
+          }).catch(err => {
+            clearTimeout(timeout);
+            console.warn('[request] 错误:', err);
+
+            if (++retryCount >= maxRetry) {
+              utils.onLoadFailure?.(el);
+              onFailure?.();
+              reject(err);
+            } else {
+              setTimeout(load, 1000);
+            }
+          });
+        };
+
+        load();
+      });
+    },
+    requestWithoutLoading: (url, options = {}, maxRetry = 2, timeout = 5000) => {
+      return new Promise((resolve, reject) => {
+        let retryCount = 0;
+
+        const tryRequest = () => {
+          let timedOut = false;
+          const timer = setTimeout(() => {
+            timedOut = true;
+            if (++retryCount > maxRetry) reject('timeout');
+            else tryRequest();
+          }, timeout);
+
+          fetch(url, options)
+            .then(resp => {
+              clearTimeout(timer);
+              if (!resp.ok) throw new Error('bad response');
+              resolve(resp);
+            })
+            .catch(err => {
+              clearTimeout(timer);
+              if (++retryCount > maxRetry) reject(err);
+              else setTimeout(tryRequest, 500);
+            });
+        };
+
+        tryRequest();
+      });
+    },
+    /********************** requestAnimationFrame ********************************/
+    // 1、requestAnimationFrame 会把每一帧中的所有 DOM 操作集中起来，在一次重绘或回流中就完成，并且重绘或回流的时间间隔紧紧跟随浏览器的刷新频率，一般来说，这个频率为每秒60帧。
+    // 2、在隐藏或不可见的元素中，requestAnimationFrame 将不会进行重绘或回流，这当然就意味着更少的的 cpu，gpu 和内存使用量。
+    requestAnimationFrame: (fn) => {
+      if (!window.requestAnimationFrame) {
+        window.requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame;
+      }
+      window.requestAnimationFrame(fn)
+    },
+    dark: {},
+  };
+
+  // utils.dark.mode 当前模式 dark or light
+  // utils.dark.toggle() 暗黑模式触发器
+  // utils.dark.push(callBack[,"callBackName"]) 传入触发器回调函数
+  utils.dark.method = {
+    toggle: new RunItem(),
+  };
+  utils.dark = Object.assign(utils.dark, {
+    push: utils.dark.method.toggle.push,
+  });
+</script>
+<script>
+  const sidebar = {
+    leftbar: () => {
+      if (l_body) {
+        l_body.toggleAttribute('leftbar');
+        l_body.removeAttribute('rightbar');
+      }
+    },
+    rightbar: () => {
+      if (l_body) {
+        l_body.toggleAttribute('rightbar');
+        l_body.removeAttribute('leftbar');
+      }
+    },
+    dismiss: () => {
+      if (l_body) {
+        l_body.removeAttribute('leftbar');
+        l_body.removeAttribute('rightbar');
+      }
+    },
+    toggleTOC: () => {
+      document.querySelector('#data-toc').classList.toggle('collapse');
+    }
+  }
+</script>
+<script type="text/javascript">
+  (() => {
+    const tagSwitchers = document.querySelectorAll('.tag-subtree.parent-tag > a > .tag-switcher-wrapper')
+    for (const tagSwitcher of tagSwitchers) {
+      tagSwitcher.addEventListener('click', (e) => {
+        const parent = e.target.closest('.tag-subtree.parent-tag')
+        parent.classList.toggle('expanded')
+        e.preventDefault()
+      })
+    }
+
+    // Get active tag from query string, then activate it.
+    const urlParams = new URLSearchParams(window.location.search)
+    const activeTag = urlParams.get('tag')
+    if (activeTag) {
+      let tag = document.querySelector(`.tag-subtree[data-tag="${activeTag}"]`)
+      if (tag) {
+        tag.querySelector('a').classList.add('active')
+        
+        while (tag) {
+          tag.classList.add('expanded')
+          tag = tag.parentElement.closest('.tag-subtree.parent-tag')
+        }
+      }
+    }
+  })()
+</script>
+
+<script async src="https://gcore.jsdelivr.net/npm/vanilla-lazyload@19.1/dist/lazyload.min.js"></script>
+<script>
+  // https://www.npmjs.com/package/vanilla-lazyload
+  // Set the options globally
+  // to make LazyLoad self-initialize
+  window.lazyLoadOptions = {
+    elements_selector: ".lazy",
+    callback_loaded: (el) => {
+      el.classList.add('loaded');
+      const wrapper = el.closest('.lazy-box');
+      const icon = wrapper?.querySelector('.lazy-icon');
+      if (icon) icon.remove();
+    }
+  };
+  // Listen to the initialization event
+  // and get the instance of LazyLoad
+  window.addEventListener(
+    "LazyLoad::Initialized",
+    function (event) {
+      window.lazyLoadInstance = event.detail.instance;
+    },
+    false
+  );
+  document.addEventListener('DOMContentLoaded', function () {
+    window.lazyLoadInstance?.update();
+  });
+
+  window.wrapLazyloadImages = (container) => {
+    if (typeof container === 'string') {
+      container = document.querySelector(container);
+    }
+    if (!container) return;
+    
+    const images = container.querySelectorAll('img');
+    images.forEach((img) => {
+      if (img.classList.contains('lazy')) return;
+
+      const src = img.getAttribute('src');
+      if (!src) return;
+
+      const wrapper = document.createElement('div');
+      wrapper.className = 'lazy-box';
+
+      const newImg = img.cloneNode();
+      newImg.removeAttribute('src');
+      newImg.setAttribute('data-src', src);
+      newImg.classList.add('lazy');
+
+      const icon = document.createElement('div');
+      icon.className = 'lazy-icon';
+      if (def.loading) {
+        icon.style.backgroundImage = `url("${def.loading}")`;
+      }
+
+      wrapper.appendChild(newImg);
+      wrapper.appendChild(icon);
+
+      img.replaceWith(wrapper);
+    });
+
+    // 通知 LazyLoad 更新
+    if (window.lazyLoadInstance?.update) {
+      window.lazyLoadInstance.update();
+    }
+  }
+  
+</script>
+
+<!-- required -->
+<script src="/js/main.js?v=1.33.1" defer></script>
+
+<script type="text/javascript">
+  const applyTheme = (theme) => {
+    if (theme === 'auto') {
+      document.documentElement.removeAttribute('data-theme')
+    } else {
+      document.documentElement.setAttribute('data-theme', theme)
+    }
+
+    // applyThemeToGiscus(theme)
+  }
+
+  // FIXME: 这会导致无法使用 preferred_color_scheme 以外的主题
+  const applyThemeToGiscus = (theme) => {
+    // theme = theme === 'auto' ? 'preferred_color_scheme' : theme
+    const cmt = document.getElementById('giscus')
+    if (cmt) {
+      // This works before giscus load.
+      cmt.setAttribute('data-theme', theme)
+    }
+
+    const iframe = document.querySelector('#comments > section.giscus > iframe')
+    if (iframe) {
+      // This works after giscus loaded.
+      const src = iframe.src
+      const newSrc = src.replace(/theme=[\w]+/, `theme=${theme}`)
+      iframe.src = newSrc
+    }
+  }
+
+  const switchTheme = () => {
+    // light -> dark -> auto -> light -> ...
+    const currentTheme = document.documentElement.getAttribute('data-theme')
+    let newTheme;
+    switch (currentTheme) {
+      case 'light':
+        newTheme = 'dark'
+        break
+      case 'dark':
+        newTheme = 'auto'
+        break
+      default:
+        newTheme = 'light'
+    }
+    applyTheme(newTheme)
+    window.localStorage.setItem('Stellar.theme', newTheme)
+    utils.dark.mode = newTheme === 'auto' ? (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light") : newTheme;
+    utils.dark.method.toggle.start();
+
+    const messages = {
+      light: `切换到浅色模式`,
+      dark: `切换到深色模式`,
+      auto: `切换到跟随系统配色`,
+    }
+    hud?.toast?.(messages[newTheme])
+  }
+
+  (() => {
+    // Apply user's preferred theme, if any.
+    const theme = window.localStorage.getItem('Stellar.theme')
+    if (theme !== null) {
+      applyTheme(theme)
+    } else {
+      utils.dark.mode = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    }
+    utils.dark.method.toggle.start();
+  })()
+</script>
+
+
+<!-- optional -->
+
+
+
+<script defer>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    ctx.services = Object.assign({}, JSON.parse(`{"mdrender":{"js":"/js/services/mdrender.js"},"siteinfo":{"js":"/js/services/siteinfo.js","api":null},"ghinfo":{"js":"/js/services/ghinfo.js"},"rating":{"js":"/js/services/rating.js","api":"https://star-vote.xaox.cc/api/rating"},"vote":{"js":"/js/services/vote.js","api":"https://star-vote.xaox.cc/api/vote"},"sites":{"js":"/js/services/sites.js"},"friends":{"js":"/js/services/friends.js"},"friends_and_posts":{"js":"/js/services/friends_and_posts.js"},"timeline":{"js":"/js/services/timeline.js"},"fcircle":{"js":"/js/services/fcircle.js"},"weibo":{"js":"/js/services/weibo.js"},"memos":{"js":"/js/services/memos.js"},"voice":{"js":"/js/plugins/voice.js"},"video":{"js":"/js/plugins/video.js"},"download-file":{"js":"/js/plugins/download-file.js"},"twikoo":{"js":"/js/services/twikoo_latest_comment.js"},"waline":{"js":"/js/services/waline_latest_comment.js"},"artalk":{"js":"/js/services/artalk_latest_comment.js"},"giscus":{"js":"/js/services/giscus_latest_comment.js"},"contributors":{"edit_this_page":{"_posts/":null,"wiki/stellar/":"https://github.com/xaoxuu/hexo-theme-stellar-docs/blob/main/"},"js":"/js/services/contributors.js"}}`));
+    for (let id of Object.keys(ctx.services)) {
+      const js = ctx.services[id].js;
+      if (id == 'siteinfo') {
+        ctx.cardlinks = document.querySelectorAll('a.link-card[cardlink]');
+        if (ctx.cardlinks?.length > 0) {
+          utils.js(js, { defer: true }).then(function () {
+            setCardLink(ctx.cardlinks);
+          });
+        }
+      } else if (id == 'voice') {
+        ctx.voiceAudios = document.querySelectorAll('.voice>audio');
+        if (ctx.voiceAudios?.length > 0) {
+          utils.js(js, { defer: true }).then(function () {
+            createVoiceDom(ctx.voiceAudios);
+          });
+        }
+      } else if (id == 'video') {
+        ctx.videos = document.querySelectorAll('.video>video');
+        if (ctx.videos?.length > 0) {
+          utils.js(js, { defer: true }).then(function () {
+            videoEvents(ctx.videos);
+          });
+        }
+      } else if (id == 'download-file') {
+        ctx.files = document.querySelectorAll('.file');
+        if (ctx.files?.length > 0) {
+          utils.js(js, { defer: true }).then(function () {
+            downloadFileEvent(ctx.files);
+          });
+        }
+      } else {
+        const els = document.getElementsByClassName(`ds-${id}`);
+        if (els?.length > 0) {
+          utils.jq(() => {
+            if (id == 'timeline' || 'memos' || 'marked') {
+              utils.js(deps.marked).then(function () {
+                utils.js(js, { defer: true });
+              });
+            } else {
+              utils.js(js, { defer: true });
+            }
+          });
+        }
+      }
+    }
+
+    // chat iphone time
+    let phoneTimes = document.querySelectorAll('.chat .status-bar .time');
+
+    if (phoneTimes.length > 0) {
+      NowTime();
+      var date = new Date();
+      var sec = date.getSeconds();
+      var firstAdjustInterval = setInterval(firstAdjustTime, 1000 * (60 - sec));
+    }
+
+    function firstAdjustTime() {
+      NowTime();
+      clearInterval(firstAdjustInterval);
+      setInterval(NowTime, 1000 * 60);
+    }
+
+    function NowTime() {
+      for (let i = 0; i < phoneTimes.length; ++i) {
+        var timeSpan = phoneTimes[i];
+        var date = new Date();
+        var hour = date.getHours();
+        var min = date.getMinutes();
+        timeSpan.innerHTML = check(hour) + ":" + check(min);
+      }
+    };
+
+    function check(val) {
+      if (val < 10) {
+        return ("0" + val);
+      }
+      return (val);
+    }
+
+    // chat quote
+    const chat_quote_obverser = new IntersectionObserver((entries, observer) => {
+      entries.filter((entry) => { return entry.isIntersecting }).sort((a, b) => a.intersectionRect.y !== b.intersectionRect.y ? a.intersectionRect.y - b.intersectionRect.y : a.intersectionRect.x - b.intersectionRect.x).forEach((entry, index) => {
+          observer.unobserve(entry.target);
+          setTimeout(() => {
+            entry.target.classList.add('quote-blink');
+            setTimeout(() => {
+              entry.target.classList.remove('quote-blink');
+            }, 1000);
+          }, Math.max(100, 16) * (index + 1));
+        });
+    });
+
+    var chatQuotes = document.querySelectorAll(".chat .talk .quote");
+    chatQuotes.forEach((quote) => {
+      quote.addEventListener('click', function () {
+        var chatCellDom = document.getElementById("quote-" + quote.getAttribute("quotedCellTag"));
+        if (chatCellDom) {
+          var chatDiv = chatCellDom.parentElement;
+          var mid = chatDiv.clientHeight / 2;
+          var offsetTop = chatCellDom.offsetTop;
+          if (offsetTop > mid - chatCellDom.clientHeight / 2) {
+            chatDiv.scrollTo({
+              top: chatCellDom.offsetTop - mid + chatCellDom.clientHeight / 2,
+              behavior: "smooth"
+            });
+          } else {
+            chatDiv.scrollTo({
+              top: 0,
+              behavior: "smooth"
+            });
+          }
+          chat_quote_obverser.observe(chatCellDom);
+        }
+      });
+    });
+  });
+</script>
+
+<script>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    ctx.search = {
+      path: `/search.json`,
+    }
+    utils.js('/js/search/local-search.js', { defer: true });
+  });
+</script><script>
+  window.FPConfig = {
+    delay: 0,
+    ignoreKeywords: [],
+    maxRPS: 5,
+    hoverDelay: 25
+  };
+</script>
+<script defer src="https://gcore.jsdelivr.net/npm/flying-pages@2/flying-pages.min.js"></script><script>
+  ctx.fancybox = {
+    selector: `.timenode p>img`,
+    css: `https://gcore.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.css`,
+    js: `https://gcore.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js`
+  };
+  var selector = '[data-fancybox]:not(.error), .with-fancybox .atk-content img:not([atk-emoticon])';
+  if (ctx.fancybox.selector) {
+    selector += `, ${ctx.fancybox.selector}`
+  }
+  var needFancybox = document.querySelectorAll(selector).length !== 0;
+  if (!needFancybox) {
+    const memos = document.getElementsByClassName('ds-memos');
+    if (memos != undefined && memos.length > 0) {
+      needFancybox = true;
+    }
+    const fancybox = document.getElementsByClassName('with-fancybox');
+    if (fancybox != undefined && fancybox.length > 0) {
+      needFancybox = true;
+    }
+  }
+  if (needFancybox) {
+    utils.css(ctx.fancybox.css);
+    utils.js(ctx.fancybox.js, { defer: true }).then(function () {
+      Fancybox.bind(selector, {
+        hideScrollbar: false,
+        Thumbs: {
+          autoStart: false,
+        },
+        caption: (fancybox, slide) => {
+          return slide.triggerEl.alt || slide.triggerEl.dataset.caption || null
+        }
+      });
+    })
+  }
+</script>
+<script>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    const swiper_api = document.getElementById('swiper-api');
+    if (swiper_api != undefined) {
+      utils.css(`https://unpkg.com/swiper@10.3/swiper-bundle.min.css`);
+      utils.js(`https://unpkg.com/swiper@10.3/swiper-bundle.min.js`, { defer: true }).then(function () {
+        const effect = swiper_api.getAttribute('effect') || '';
+        var swiper = new Swiper('.swiper#swiper-api', {
+          slidesPerView: 'auto',
+          spaceBetween: 8,
+          centeredSlides: true,
+          effect: effect,
+          rewind: true,
+          pagination: {
+            el: '.swiper-pagination',
+            clickable: true,
+          },
+          navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+          },
+        });
+      })
+    }
+  });
+</script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    window.codeElements = document.querySelectorAll('.code');
+    if (window.codeElements.length > 0) {
+      ctx.copycode = {
+        default_text: `Copy`,
+        success_text: `Copied`,
+        toast: `复制成功`,
+      };
+      utils.js('/js/plugins/copycode.js');
+    }
+  });
+</script>
+
+
+<!-- inject -->
+
+</div><!-- hexo injector body_end start -->
+<script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<style>
+.site-stats {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 16px 0;
+  margin: 12px 0;
+  font-size: 12px;
+}
+.site-stats .stat-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.site-stats .stat-label {
+  color: var(--text-a3);
+}
+.site-stats .stat-value {
+  background: var(--block);
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-weight: 500;
+  color: var(--text-a1);
+  min-width: 24px;
+  text-align: center;
+}
+</style>
+<div class="site-stats">
+  <span class="stat-item">
+    <span class="stat-label">访客数</span>
+    <span class="stat-value" id="busuanzi_value_site_uv">0</span>
+  </span>
+  <span class="stat-item">
+    <span class="stat-label">访问量</span>
+    <span class="stat-value" id="busuanzi_value_site_pv">0</span>
+  </span>
+  <span class="stat-item">
+    <span class="stat-label">运行</span>
+    <span class="stat-value" id="runtime-days">0</span>
+    <span class="stat-label">天</span>
+  </span>
+</div>
+<script>
+(function() {
+  var startDate = new Date('2026-05-04');
+  function updateRuntime() {
+    var diff = new Date() - startDate;
+    document.getElementById('runtime-days').textContent = Math.floor(diff / (1000 * 60 * 60 * 24));
+  }
+  updateRuntime();
+})();
+</script>
+<!-- hexo injector body_end end --></body></html>
